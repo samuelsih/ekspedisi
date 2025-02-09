@@ -3,28 +3,38 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from "zod";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { Check, ChevronsUpDown } from "lucide-react";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
-import { useEffect, useState } from "react";
 import axios from "axios";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Rating } from "@/components/ui/rating";
 import Selector from "@/components/SelectSearch";
 
 const formSchema = z.object({
-    customerId: z.string({
-        message: "ID Customer tidak boleh kosong"
+    customerId: z.string({ message: "ID Customer tidak boleh kosong" }).nonempty("ID Customer tidak boleh kosong"),
+    channelId: z.string({ message: "ID Channel tidak boleh kosong" }).nonempty("Channel tidak boleh kosong"),
+    driverId: z.string({ message: "ID Driver tidak boleh kosong" }).nonempty("Driver tidak boleh kosong"),
+    questions: z.record(
+        z.number()
+            .int("Rating harus bilangan bulat")
+            .min(1, "Minimal rating adalah 1")
+            .max(5, "Maksimal rating adalah 5")
+    ).superRefine((data, ctx) => {
+        Object.entries(data).forEach(([key, value]) => {
+            if (!Number.isInteger(value)) {
+                ctx.addIssue({
+                    code: "custom",
+                    message: `Rating harus bilangan bulat`,
+                    path: ["questions", key],
+                });
+            } else if (value < 1 || value > 5) {
+                ctx.addIssue({
+                    code: "custom",
+                    message: `Rating harus antara 1-5`,
+                    path: ["questions", key],
+                });
+            }
+        });
     }),
-    channelId: z.string({
-        message: "Channel tidak boleh kosong",
-    }),
-    driverId: z.string({
-        message: "Driver tidak boleh kosong",
-    }),
-    questions: z.record(z.number()),
 });
 
 type SurveySchema = z.infer<typeof formSchema>
@@ -59,43 +69,33 @@ interface Driver {
 }
 
 export default function Survey({ title, subtitle, questions, channels }: Props) {
-    const form = useForm<SurveySchema>({ resolver: zodResolver(formSchema) })
-
-    const [customerId, setCustomerId] = useState("")
-    const [searchTermCustomerId, setSearchTermCustomerId] = useState("")
-    const [openPopoverCustomerId, setOpenPopoverCustomerId] = useState(false)
-    const [customerIds, setCustomerIds] = useState<CustomerID[]>([])
-
-    useEffect(() => {
-        const loadCustomerIds = async () => {
-            const result = await axios.get<CustomerID[]>("/customer", { params: { search: searchTermCustomerId } })
-            setCustomerIds(result.data)
+    const form = useForm<SurveySchema>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            questions: questions.reduce<Record<string, number>>((acc, item) => {
+                acc[item.id] = 0;
+                return acc;
+            }, {})
         }
-
-        loadCustomerIds()
-    }, [searchTermCustomerId])
-
-    const [answeredQuestions, setAnsweredQuestions] = useState<Record<string, number>>(
-        questions.reduce<Record<string, number>>((acc, item) => {
-            acc[item.id] = 0;
-            return acc;
-        }, {})
-    )
-
-    const [driverId, setDriverId] = useState("")
+    })
 
     const fetchDrivers = async (searchTerm: string) => {
         const result = await axios.get<Driver[]>("/driver", { params: { search: searchTerm } })
         return result.data
     }
 
-    const handleSubmit = (_: SurveySchema) => {
+    const fetchCustomerIds = async (searchTerm: string) => {
+        const result = await axios.get<CustomerID[]>("/customer", { params: { search: searchTerm } })
+        return result.data
+    }
 
+    const handleSubmit = (schema: SurveySchema) => {
+        console.log(schema.channelId, schema.customerId, schema.driverId, schema.questions)
     }
 
     return (
-        <div>
-            <Head title="Survey Ekspedisi JTA" />
+        <div className="container mx-auto p-8">
+            <Head title="Survey" />
             <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl text-center">
                 {title}
             </h1>
@@ -107,75 +107,27 @@ export default function Survey({ title, subtitle, questions, channels }: Props) 
                 <FormField
                     control={form.control}
                     name="customerId"
-                    render={() => (
-                        <FormItem>
-                        <FormLabel>ID Customer</FormLabel>
-                        <Popover open={openPopoverCustomerId} onOpenChange={setOpenPopoverCustomerId}>
-                            <PopoverTrigger asChild>
-                            <FormControl>
-                                <Button
-                                    variant="outline"
-                                    role="combobox"
-                                    className={cn(
-                                        "w-full justify-between",
-                                        !customerId && "text-muted-foreground"
-                                    )}
-                                    aria-expanded={openPopoverCustomerId}
-                                >
-                                {customerId
-                                    ? customerIds.find(
-                                        (customer) => customer.id === customerId
-                                    )?.name
-                                    : "Cari ID Customer"}
-                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                </Button>
-                            </FormControl>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
-                            <Command>
-                                <CommandInput
-                                    className="w-full"
-                                    placeholder="Cari ID Customer..."
-                                    onValueChange={(value) => {
-                                        setSearchTermCustomerId(value)
-                                    }}
-                                />
-                                <CommandList>
-                                <CommandEmpty>Tidak Ditemukan</CommandEmpty>
-                                <CommandGroup>
-                                    {customerIds.map((customer) => (
-                                    <CommandItem
-                                        value={customer.id}
-                                        key={customer.id}
-                                        onSelect={(value) => {
-                                            const selectedCustomer = customerIds.find(customer => {
-                                                return customer.id == value
-                                            })
+                    render={({ field }) => (
+                        <Selector
+                            searchKey="customer"
+                            label="ID Customer"
+                            value={field.value}
+                            fetchItemsFn={fetchCustomerIds}
+                            onChange={field.onChange}
+                            renderDisplayOnFound={(items) => {
+                                if(!field.value) {
+                                    return "Cari ID Customer"
+                                }
 
-                                            if(selectedCustomer) {
-                                                setCustomerId(value)
-                                                setOpenPopoverCustomerId(false)
-                                            }
-                                        }}
-                                    >
-                                        <Check
-                                            className={cn(
-                                                "mr-2 h-4 w-4",
-                                                customer.id === customerId
-                                                ? "opacity-100"
-                                                : "opacity-0"
-                                            )}
-                                        />
-                                        {customer.id_customer} - {customer.name}
-                                    </CommandItem>
-                                    ))}
-                                </CommandGroup>
-                                </CommandList>
-                            </Command>
-                            </PopoverContent>
-                        </Popover>
-                        <FormMessage />
-                        </FormItem>
+                                const selectedItem = items.find((item) => item.id === field.value);
+                                if(!selectedItem) {
+                                    return "Cari ID Customer"
+                                }
+
+                                return `${selectedItem.id_customer} (${selectedItem.name})`
+                            }}
+                            renderDropdownList={(customer: CustomerID) => `${customer.id_customer} (${customer.name})`}
+                        />
                     )}
                 />
 
@@ -205,14 +157,26 @@ export default function Survey({ title, subtitle, questions, channels }: Props) 
                 <FormField
                     control={form.control}
                     name="driverId"
-                    render={() => (
+                    render={({ field }) => (
                         <Selector
+                            searchKey="driver"
                             label="NIK Supir"
-                            value={driverId}
-                            searchKey="nik"
+                            value={field.value}
                             fetchItemsFn={fetchDrivers}
-                            onChange={(v) => setDriverId(v)}
-                            renderItem={(driver: Driver) => `${driver.nik} - ${driver.name}`}
+                            onChange={field.onChange}
+                            renderDisplayOnFound={(items) => {
+                                if(!field.value) {
+                                    return "Cari NIK Supir"
+                                }
+
+                                const selectedItem = items.find((item) => item.id === field.value);
+                                if(!selectedItem) {
+                                    return "Cari NIK Supir"
+                                }
+
+                                return `${selectedItem.nik} (${selectedItem.name})`
+                            }}
+                            renderDropdownList={(driver: Driver) => `${driver.nik} (${driver.name})`}
                         />
                     )}
                 />
@@ -221,20 +185,23 @@ export default function Survey({ title, subtitle, questions, channels }: Props) 
                     <FormField
                         key={question.id}
                         control={form.control}
-                        name={"questions"}
+                        name={`questions.${question.id}`}
                         render={({ field }) => (
                             <FormItem className="flex flex-col items-start">
                                 <FormLabel>{question.title}</FormLabel>
                                 <FormControl className="w-full">
-                                    <Rating value={answeredQuestions[question.id]} onChange={(value) => {
-                                        setAnsweredQuestions(qs => ({
-                                            ...qs,
-                                            [question.id]: value,
-                                        }));
-                                    }}/>
+                                    <Rating
+                                        size="lg"
+                                        value={field.value ?? 0}
+                                        onChange={(value) => {
+                                            form.setValue(`questions.${question.id}`, value, {
+                                                shouldValidate: true,
+                                            });
+                                        }}
+                                    />
                                 </FormControl>
-                                <FormDescription>Nilai ({answeredQuestions[question.id]}/5)</FormDescription>
-                                <FormMessage />
+                                <FormDescription>Nilai ({field.value ?? 0}/5)</FormDescription>
+                                <FormMessage>{form.formState.errors.questions?.[question.id]?.message}</FormMessage>
                             </FormItem>
                         )}
                     />
