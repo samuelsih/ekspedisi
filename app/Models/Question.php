@@ -9,4 +9,9 @@ use Illuminate\Database\Eloquent\Model;
 class Question extends Model
 {
     use HasUlids;
+
+    public function survey_answers()
+    {
+        return $this->hasMany(SurveyAnswer::class);
+    }
 }
