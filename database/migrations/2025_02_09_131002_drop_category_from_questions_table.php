@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('survey_answers', function (Blueprint $table) {
-            $table->foreignUlid('id')->primary();
-            $table->foreignUlid('question_id')->constrained();
-            $table->integer('value');
-            $table->timestamps();
+        Schema::table('questions', function (Blueprint $table) {
+            $table->dropColumn('category');
         });
     }
 
@@ -24,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('survey_answers');
+        Schema::table('questions', function (Blueprint $table) {
+            $table->string('category');
+        });
     }
 };

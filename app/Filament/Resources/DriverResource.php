@@ -29,8 +29,8 @@ class DriverResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('nik')
                     ->required()
-                    ->minLength(16)
-                    ->maxLength(16),
+                    ->minLength(5)
+                    ->maxLength(100),
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->minLength(5)

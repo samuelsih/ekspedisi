@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources;
 
-use App\Enum\QuestionCategory;
 use App\Filament\Resources\QuestionResource\Pages;
 use App\Filament\Resources\QuestionResource\RelationManagers;
 use App\Models\Question;
@@ -28,9 +27,6 @@ class QuestionResource extends Resource
                     ->required()
                     ->minLength(5)
                     ->maxLength(100),
-                Forms\Components\Select::make('category')
-                    ->options(QuestionCategory::values())
-                    ->required(),
                 Forms\Components\Select::make('is_active')
                     ->label('Status')
                     ->options([
@@ -50,7 +46,6 @@ class QuestionResource extends Resource
                 Tables\Columns\TextColumn::make('is_active')
                     ->label('Status')
                     ->formatStateUsing(fn ($state) => $state ? "Active" : "Not Active"),
-                Tables\Columns\TextColumn::make('category'),
             ])
             ->filters([
                 //

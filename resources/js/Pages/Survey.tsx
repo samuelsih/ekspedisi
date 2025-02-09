@@ -1,4 +1,4 @@
-import { Head } from "@inertiajs/react";
+import { Head, usePage } from "@inertiajs/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from "zod";
@@ -8,11 +8,15 @@ import axios from "axios";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Rating } from "@/components/ui/rating";
 import Selector from "@/components/SelectSearch";
+import CameraScreenshot from "@/components/CameraScreenshot";
+import { Toaster } from "@/components/ui/toaster"
+import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
 
 const formSchema = z.object({
     customerId: z.string({ message: "ID Customer tidak boleh kosong" }).nonempty("ID Customer tidak boleh kosong"),
-    channelId: z.string({ message: "ID Channel tidak boleh kosong" }).nonempty("Channel tidak boleh kosong"),
-    driverId: z.string({ message: "ID Driver tidak boleh kosong" }).nonempty("Driver tidak boleh kosong"),
+    channelId: z.string({ message: "Channel tidak boleh kosong" }).nonempty("Channel tidak boleh kosong"),
+    driverId: z.string({ message: "NIK Driver tidak boleh kosong" }).nonempty("NIK Driver tidak boleh kosong"),
     questions: z.record(
         z.number()
             .int("Rating harus bilangan bulat")
@@ -68,7 +72,20 @@ interface Driver {
     name: string;
 }
 
+interface GenericResponse {
+    message: string;
+}
+
 export default function Survey({ title, subtitle, questions, channels }: Props) {
+    const { toast } = useToast()
+    const onPermissionDenied = () => {
+        toast({
+            variant: "destructive",
+            title: "Gagal Mengambil Gambar",
+            description: "Berikan izin kamera pada browser lalu refresh browser kembali.",
+        })
+    }
+
     const form = useForm<SurveySchema>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -76,7 +93,7 @@ export default function Survey({ title, subtitle, questions, channels }: Props) 
                 acc[item.id] = 0;
                 return acc;
             }, {})
-        }
+        },
     })
 
     const fetchDrivers = async (searchTerm: string) => {
@@ -89,13 +106,54 @@ export default function Survey({ title, subtitle, questions, channels }: Props) 
         return result.data
     }
 
-    const handleSubmit = (schema: SurveySchema) => {
-        console.log(schema.channelId, schema.customerId, schema.driverId, schema.questions)
+    const [imgBlob, setImgBlob] = useState<Blob | null>(null)
+
+    const handleSubmit = async (schema: SurveySchema) => {
+        const formData = new FormData()
+        formData.append("customerId", schema.customerId)
+        formData.append("channelId", schema.channelId)
+        formData.append("driverId", schema.driverId)
+        formData.append("questions", JSON.stringify(schema.questions))
+        formData.append("image", imgBlob!, "screenshot.jpg")
+
+        try {
+            await axios.postForm("/survey", formData)
+            toast({
+                title: "Berhasil",
+                description: "Survey berhasil dikirim"
+            })
+        } catch (error) {
+            if(axios.isAxiosError(error)) {
+                switch (error.response?.status) {
+                    case 400:
+                        toast({
+                            variant: "destructive",
+                            title: "Gagal Memasukkan Data",
+                            description: error.response?.data?.message,
+                        })
+                        break;
+
+                    case 422:
+                        console.log("Babi")
+                        break;
+
+                    default:
+                        toast({
+                            variant: "destructive",
+                            title: "Gagal Memasukkan Data",
+                            description: "Terdapat kesalahan pada server, silakan coba lagi beberapa saat",
+                        })
+                        break;
+                }
+            }
+        }
     }
 
     return (
         <div className="container mx-auto p-8">
             <Head title="Survey" />
+            <Toaster />
+            <CameraScreenshot onPermissionDenied={onPermissionDenied} onCaptureSuccess={b => setImgBlob(b)}/>
             <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl text-center">
                 {title}
             </h1>

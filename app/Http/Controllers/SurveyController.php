@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SurveyRequest;
 use App\Models\Channel;
 use App\Models\Customer;
 use App\Models\Driver;
 use App\Models\Question;
+use App\Models\Survey;
 use App\Models\WebConfig;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class SurveyController extends Controller
@@ -31,6 +35,54 @@ class SurveyController extends Controller
             'questions' => $questions,
             'channels' => $channels
         ]);
+    }
+
+    public function store(SurveyRequest $request)
+    {
+        $validated = $request->validated();
+
+        $exists = Survey::query()
+            ->whereDate('created_at', now()->toDateString())
+            ->where('customer_id', $validated['customerId'])
+            ->where('driver_id', $validated['driverId'])
+            ->exists();
+
+        if($exists) {
+            return response()->json(['message' => "Survey untuk supir ini hanya bisa dilakukan 1 kali sehari"], 400);
+        }
+
+        try {
+            DB::beginTransaction();
+            $survey = Survey::query()->create([
+                'customer_id' => $validated['customerId'],
+                'driver_id' => $validated['driverId'],
+                'channel_id' => $validated['channelId'],
+            ]);
+
+            $questions = $validated['questions'];
+            $questions = array_map(
+                fn($value, $key) => ['id' => str()->ulid(), 'question_id' => $key, 'value' => $value, 'survey_id' => $survey->id],
+                $questions,
+                array_keys($questions),
+            );
+
+            DB::table('survey_answers')->insert($questions);
+            DB::commit();
+        } catch(QueryException $e) {
+            DB::rollBack();
+            if ($e->getCode() == "23000") {
+                $errorMessage = $e->getMessage();
+                if (str_contains($errorMessage, 'question_id')) {
+                    return response()->json(['message' => 'Terdapat pertanyaan yang tidak diketahui'], 400);
+                }
+            }
+
+            return response()->json(['message' => "Terdapat kesalahan pada server, silakan coba lagi beberapa saat"], 500);
+        } catch(Exception $e) {
+            return response()->json(['message' => "Terdapat kesalahan pada server, silakan coba lagi beberapa saat"], 500);
+        }
+
+        return response()->json(['message' => 'OK'], 201);
     }
 
     public function searchCustomerID(Request $request)

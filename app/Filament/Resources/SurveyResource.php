@@ -32,13 +32,17 @@ class SurveyResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('index')->label('No.')->rowIndex(),
-
+                Tables\Columns\TextColumn::make('customer.id_customer')->label('ID Customer'),
+                Tables\Columns\TextColumn::make('customer.name')->label('Nama Customer'),
+                Tables\Columns\TextColumn::make('channel.name')->label('Channel'),
+                Tables\Columns\TextColumn::make('driver.nik')->label('NIK Supir'),
+                Tables\Columns\TextColumn::make('driver.name')->label('Nama Supir'),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -58,8 +62,11 @@ class SurveyResource extends Resource
     {
         return [
             'index' => Pages\ListSurveys::route('/'),
-            'create' => Pages\CreateSurvey::route('/create'),
-            'edit' => Pages\EditSurvey::route('/{record}/edit'),
         ];
+    }
+
+    public static function canCreate(): bool
+    {
+        return false;
     }
 }

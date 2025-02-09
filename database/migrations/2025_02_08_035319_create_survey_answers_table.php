@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('stores', function (Blueprint $table) {
-            $table->ulid('id')->primary();
-            $table->string('name');
+        Schema::create('survey_answers', function (Blueprint $table) {
+            $table->foreignUlid('id')->primary();
+            $table->foreignUlid('survey_id')->constrained();
+            $table->foreignUlid('question_id')->constrained();
+            $table->integer('value');
             $table->timestamps();
         });
     }
@@ -23,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('stores');
+        Schema::dropIfExists('survey_answers');
     }
 };
