@@ -134,7 +134,6 @@ export default function Survey({ title, subtitle, questions, channels }: Props) 
                         break;
 
                     case 422:
-                        console.log("Babi")
                         break;
 
                     default:

@@ -12,6 +12,7 @@ use App\Models\WebConfig;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class SurveyController extends Controller
@@ -41,14 +42,24 @@ class SurveyController extends Controller
     {
         $validated = $request->validated();
 
-        $exists = Survey::query()
-            ->whereDate('created_at', now()->toDateString())
-            ->where('customer_id', $validated['customerId'])
-            ->where('driver_id', $validated['driverId'])
-            ->exists();
+        // $exists = Survey::query()
+        //     ->whereDate('created_at', now()->toDateString())
+        //     ->where('customer_id', $validated['customerId'])
+        //     ->where('driver_id', $validated['driverId'])
+        //     ->exists();
 
-        if($exists) {
-            return response()->json(['message' => "Survey untuk supir ini hanya bisa dilakukan 1 kali sehari"], 400);
+        // if($exists) {
+        //     return response()->json(['message' => "Survey untuk supir ini hanya bisa dilakukan 1 kali sehari"], 400);
+        // }
+
+        try {
+            $file = $request->file('image');
+            $fileName = str()->random(40) . '.' . $file->getClientOriginalExtension();
+            $path = Storage::disk('s3')->putFileAs('validation', $file, $fileName, 'public');
+            $imageURL = Storage::disk('s3')->url($path);
+        } catch (Exception $e) {
+
+            return response()->json(['message' => $e->getMessage()], 400);
         }
 
         try {
@@ -57,6 +68,7 @@ class SurveyController extends Controller
                 'customer_id' => $validated['customerId'],
                 'driver_id' => $validated['driverId'],
                 'channel_id' => $validated['channelId'],
+                'img_url' => $imageURL,
             ]);
 
             $questions = $validated['questions'];
@@ -77,9 +89,9 @@ class SurveyController extends Controller
                 }
             }
 
-            return response()->json(['message' => "Terdapat kesalahan pada server, silakan coba lagi beberapa saat"], 500);
+            return response()->json(['message' => $e->getMessage()], 400);
         } catch(Exception $e) {
-            return response()->json(['message' => "Terdapat kesalahan pada server, silakan coba lagi beberapa saat"], 500);
+            return response()->json(['message' => $e->getMessage()], 400);
         }
 
         return response()->json(['message' => 'OK'], 201);

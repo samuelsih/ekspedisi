@@ -7,7 +7,7 @@ use Filament\Widgets\ChartWidget;
 
 class RatingQuestion extends ChartWidget
 {
-    protected static ?string $heading = 'Rating Question';
+    protected static ?string $heading = 'Rating By Question';
 
     private array $colors = [
         'rgb(255, 99, 132)',  // Merah muda

@@ -37,6 +37,10 @@ class SurveyResource extends Resource
                 Tables\Columns\TextColumn::make('channel.name')->label('Channel'),
                 Tables\Columns\TextColumn::make('driver.nik')->label('NIK Supir'),
                 Tables\Columns\TextColumn::make('driver.name')->label('Nama Supir'),
+                Tables\Columns\ImageColumn::make('img_url')
+                    ->label("Validasi Gambar")
+                    ->square()
+                    ->size(100),
             ])
             ->filters([
                 //
