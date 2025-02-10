@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Channel extends Model
 {
     use HasUlids;
+
+    public function surveys()
+    {
+        return $this->hasMany(Survey::class);
+    }
 }

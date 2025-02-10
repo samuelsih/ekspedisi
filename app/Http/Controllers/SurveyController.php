@@ -42,15 +42,15 @@ class SurveyController extends Controller
     {
         $validated = $request->validated();
 
-        // $exists = Survey::query()
-        //     ->whereDate('created_at', now()->toDateString())
-        //     ->where('customer_id', $validated['customerId'])
-        //     ->where('driver_id', $validated['driverId'])
-        //     ->exists();
+        $exists = Survey::query()
+            ->whereDate('created_at', now()->toDateString())
+            ->where('customer_id', $validated['customerId'])
+            ->where('driver_id', $validated['driverId'])
+            ->exists();
 
-        // if($exists) {
-        //     return response()->json(['message' => "Survey untuk supir ini hanya bisa dilakukan 1 kali sehari"], 400);
-        // }
+        if($exists) {
+            return response()->json(['message' => "Survey untuk supir ini hanya bisa dilakukan 1 kali sehari"], 400);
+        }
 
         try {
             $file = $request->file('image');
