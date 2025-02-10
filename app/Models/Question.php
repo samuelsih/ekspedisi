@@ -14,4 +14,9 @@ class Question extends Model
     {
         return $this->hasMany(SurveyAnswer::class);
     }
+
+    public function getNameAttribute()
+    {
+        return $this->title;
+    }
 }

@@ -9,6 +9,11 @@ class Survey extends Model
 {
     use HasUlids;
 
+    public function getQuestionValueAttribute()
+    {
+        return $this->survey_answers()->value;
+    }
+
     public function customer()
     {
         return $this->belongsTo(Customer::class);
