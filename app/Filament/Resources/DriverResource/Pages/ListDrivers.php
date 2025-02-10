@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\DriverResource\Pages;
 
+use App\Filament\Imports\DriverImporter;
 use App\Filament\Resources\DriverResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
@@ -13,12 +14,9 @@ class ListDrivers extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            \EightyNine\ExcelImport\ExcelImportAction::make()
-                ->color("primary")
-                ->validateUsing([
-                    'nik' => ['required', 'min:5', 'max:100'],
-                    'name' => ['required', 'min:5', 'max:100'],
-                ]),
+            Actions\ImportAction::make()
+                ->color('primary')
+                ->importer(DriverImporter::class),
             Actions\CreateAction::make(),
         ];
     }
