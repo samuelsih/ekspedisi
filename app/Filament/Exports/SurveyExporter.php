@@ -59,4 +59,15 @@ class SurveyExporter extends Exporter
     {
         return now()->addDay();
     }
+
+    public static function getDisk(): ?string
+    {
+        return 's3';
+    }
+
+    public static function getDownloadUrl(Export $export): ?string
+    {
+        return Storage::disk('s3')->url($export->file_path);
+    }
+
 }

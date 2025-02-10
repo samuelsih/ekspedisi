@@ -44,8 +44,8 @@ class DriverResource extends Resource
             ->defaultSort('created_at', 'desc')
             ->columns([
                 Tables\Columns\TextColumn::make('index')->label('No.')->rowIndex(),
-                Tables\Columns\TextColumn::make('nik')->label('NIK'),
-                Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\TextColumn::make('nik')->label('NIK')->searchable(),
+                Tables\Columns\TextColumn::make('name')->searchable(),
             ])
             ->filters([
                 //

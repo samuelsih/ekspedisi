@@ -45,8 +45,8 @@ class CustomerResource extends Resource
             ->defaultSort('created_at', 'desc')
             ->columns([
                 Tables\Columns\TextColumn::make('index')->label('No.')->rowIndex(),
-                Tables\Columns\TextColumn::make('id_customer')->label('ID Customer'),
-                Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\TextColumn::make('id_customer')->label('ID Customer')->searchable(),
+                Tables\Columns\TextColumn::make('name')->searchable(),
             ])
             ->filters([
                 //
