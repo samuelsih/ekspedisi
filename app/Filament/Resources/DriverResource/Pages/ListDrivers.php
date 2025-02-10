@@ -13,6 +13,12 @@ class ListDrivers extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
+            \EightyNine\ExcelImport\ExcelImportAction::make()
+                ->color("primary")
+                ->validateUsing([
+                    'nik' => ['required', 'min:5', 'max:100'],
+                    'name' => ['required', 'min:5', 'max:100'],
+                ]),
             Actions\CreateAction::make(),
         ];
     }

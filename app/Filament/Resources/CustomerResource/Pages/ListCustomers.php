@@ -13,6 +13,12 @@ class ListCustomers extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
+            \EightyNine\ExcelImport\ExcelImportAction::make()
+                ->color("primary")
+                ->validateUsing([
+                    'id_customer' => ['required', 'min:5', 'max:100'],
+                    'name' => ['required', 'min:5', 'max:100'],
+                ]),
             Actions\CreateAction::make(),
         ];
     }
