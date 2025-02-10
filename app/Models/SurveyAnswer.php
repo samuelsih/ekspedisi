@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class SurveyAnswer extends Model
 {
     use HasUlids;
+
+    public function question()
+    {
+        return $this->belongsTo(Question::class);
+    }
 }
