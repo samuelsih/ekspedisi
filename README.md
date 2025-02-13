@@ -1,7 +1,7 @@
 # Ekspedisi JTA
 
 ## Installation on Server:
-### This assumed that you do not use some CI/CD tools / some sort of containerization.
+### This assumed that you run below commands directly in server and do not use some CI/CD tools / some sort of containerization.
 
 #### Setup Project
 1. Install php
