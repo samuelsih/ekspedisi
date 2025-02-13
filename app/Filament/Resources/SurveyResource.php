@@ -8,13 +8,15 @@ use App\Filament\Resources\SurveyResource\RelationManagers;
 use App\Models\Survey;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Infolists;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\ExportAction;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Illuminate\Support\HtmlString;
 
 class SurveyResource extends Resource
 {
@@ -26,57 +28,49 @@ class SurveyResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Placeholder::make('customer.id_customer')->label('ID Customer')
-                    ->content(function ($record): HtmlString {
-                        return new HtmlString("<p>" . $record->customer->id_customer . "</p>");
-                  }),
-                Forms\Components\Placeholder::make('customer.name')->label('Nama Customer')
-                    ->content(function ($record): HtmlString {
-                        return new HtmlString("<p>" . $record->customer->name . "</p>");
-                    }),
-                Forms\Components\Placeholder::make('channel.name')->label('Channel')
-                    ->content(function ($record): HtmlString {
-                        return new HtmlString("<p>" . $record->channel->name . "</p>");
-                    }),
-                Forms\Components\Placeholder::make('driver.nik')->label('NIK Supir')
-                    ->content(function ($record): HtmlString {
-                        return new HtmlString("<p>" . $record->driver->nik . "</p>");
-                    }),
-                Forms\Components\Placeholder::make('driver.name')->label('Nama Supir')
-                    ->content(function ($record): HtmlString {
-                        return new HtmlString("<p>" . $record->driver->name . "</p>");
-                    }),
-                Forms\Components\Placeholder::make('survey')->label('Rating')
-                    ->content(function ($record): HtmlString {
+                //
+            ]);
+    }
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                Infolists\Components\TextEntry::make('customer.id_customer')->label('ID Customer'),
+                Infolists\Components\TextEntry::make('customer.name')->label('Nama Customer'),
+                Infolists\Components\TextEntry::make('channel.name')->label('Channel'),
+                Infolists\Components\TextEntry::make('driver.nik')->label('NIK Supir'),
+                Infolists\Components\TextEntry::make('driver.name')->label('Nama Supir')
+                    ->columnSpanFull(),
+                Infolists\Components\TextEntry::make('survey')
+                    ->label('Survey')
+                    ->markdown()
+                    ->getStateUsing(function (Survey $record): string {
                         $answers = $record
                             ->loadMissing('survey_answers.question')
                             ->survey_answers
-                            ->map(function ($answer) {
-                                return "<p><strong>{$answer->question->title}: </strong> {$answer->value}</p>";
-                        })->implode('');
+                            ->map(fn ($answer) => "| **{$answer->question->title}** | {$answer->value} |")
+                            ->implode("\n");
 
-
-                        return new HtmlString($answers);
+                        return "| **Question** | **Answer** |\n|---|---|\n" . $answers;
                     }),
-                Forms\Components\Placeholder::make('img_url')
-                    ->label('Validasi Gambar')
-                    ->content(function ($record): HtmlString {
-                        return new HtmlString("<img src= '" . $record->img_url . "')>");
-                  }),
-            ]);
+                Infolists\Components\ImageEntry::make('img_url')->label('Validasi Gambar')
+                    ->width(400)
+                    ->height(400),
+            ])
+            ->columns(2);
     }
 
     public static function table(Table $table): Table
     {
         return $table
-            ->defaultSort('created_at', 'desc')
             ->columns([
                 Tables\Columns\TextColumn::make('index')->label('No.')->rowIndex(),
-                Tables\Columns\TextColumn::make('customer.id_customer')->label('ID Customer'),
-                Tables\Columns\TextColumn::make('customer.name')->label('Nama Customer'),
+                Tables\Columns\TextColumn::make('customer.id_customer')->label('ID Customer')->searchable(),
+                Tables\Columns\TextColumn::make('customer.name')->label('Nama Customer')->searchable(),
                 Tables\Columns\TextColumn::make('channel.name')->label('Channel'),
-                Tables\Columns\TextColumn::make('driver.nik')->label('NIK Supir'),
-                Tables\Columns\TextColumn::make('driver.name')->label('Nama Supir'),
+                Tables\Columns\TextColumn::make('driver.nik')->label('NIK Supir')->searchable(),
+                Tables\Columns\TextColumn::make('driver.name')->label('Nama Supir')->searchable(),
                 Tables\Columns\ImageColumn::make('img_url')
                     ->label("Validasi Gambar")
                     ->square()
@@ -86,7 +80,8 @@ class SurveyResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ViewAction::make(),
+                Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -95,7 +90,8 @@ class SurveyResource extends Resource
             ])
             ->headerActions([
                 ExportAction::make()
-                    ->exporter(SurveyExporter::class),
+                    ->exporter(SurveyExporter::class)
+                    ->color('primary'),
             ]);
     }
 
@@ -112,6 +108,11 @@ class SurveyResource extends Resource
             'index' => Pages\ListSurveys::route('/'),
             'view' => Pages\ViewSurvey::route('/{record}'),
         ];
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        return false;
     }
 
     public static function canCreate(): bool

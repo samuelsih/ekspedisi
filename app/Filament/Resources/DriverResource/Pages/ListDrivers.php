@@ -16,6 +16,7 @@ class ListDrivers extends ListRecords
         return [
             Actions\ImportAction::make()
                 ->color('primary')
+                ->label('Import delivery man')
                 ->importer(DriverImporter::class),
             Actions\CreateAction::make(),
         ];

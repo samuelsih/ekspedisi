@@ -16,6 +16,7 @@ class ListCustomers extends ListRecords
         return [
             Actions\ImportAction::make()
                     ->color('primary')
+                    ->label('Import toko')
                     ->importer(CustomerImporter::class),
             Actions\CreateAction::make(),
         ];
