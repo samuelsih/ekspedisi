@@ -66,7 +66,7 @@ class TopWorstDriver extends ChartWidget
                                     result.push(text.substring(i, i + limit));
                                 }
 
-                                result[result.length - 1] += ' (' + value + ')';
+                                result[result.length - 1] += ' (' + value.toFixed(3) + ')';
                                 return result;
                             }
                         }
