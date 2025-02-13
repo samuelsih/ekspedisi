@@ -23,7 +23,9 @@ class Dashboard extends BaseDashboard
     {
         return [
             'sm' => 1,
-            'md' => 3,
+            'md' => 2,
+            'lg' => 2,
+            'xl' => 3,
         ];
     }
 

@@ -57,6 +57,25 @@ class RatingQuestion extends ChartWidget
         return RawJs::make(<<<'JS'
             {
                 plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function (tooltipItem) {
+                                const text = tooltipItem.label;
+                                const value = tooltipItem.raw;
+                                const limit = 20;
+
+                                let result = [];
+
+                                for(let i = 0; i < text.length; i += limit) {
+                                    result.push(text.substring(i, i + limit));
+                                }
+
+                                result[result.length - 1] += ' (' + value + ')';
+                                return result;
+                            }
+                        }
+                    },
+
                     legend: {
                         display: true,
                         labels: {
@@ -68,7 +87,7 @@ class RatingQuestion extends ChartWidget
                                         const formattedLabel = label.length > limit ? label.slice(0, limit) + '...' : label;
                                         return {
                                             text: formattedLabel,
-                                            fillStyle: data.datasets[0].backgroundColor[i]
+                                            fillStyle: data.datasets[0].backgroundColor[i],
                                         }
                                     })
                                 }
