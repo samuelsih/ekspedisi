@@ -62,6 +62,6 @@ class SurveyExporter extends Exporter
 
     public function getFileDisk(): string
     {
-        return 'local';
+        return 'export';
     }
 }
