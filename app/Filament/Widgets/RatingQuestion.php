@@ -61,7 +61,7 @@ class RatingQuestion extends ChartWidget
                         display: true,
                         labels: {
                             generateLabels: function (chart) {
-                                const limit = 1;
+                                const limit = 5;
                                 const data = chart.data;
                                 if(data.labels.length && data.datasets.length) {
                                     return data.labels.map(function(label, i) {
