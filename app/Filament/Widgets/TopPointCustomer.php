@@ -3,6 +3,7 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Customer;
+use Filament\Support\RawJs;
 use Filament\Widgets\ChartWidget;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
@@ -37,6 +38,27 @@ class TopPointCustomer extends ChartWidget
             ],
             'labels' => $customers->map(fn ($customer) => "{$customer->name}")->toArray(),
         ];
+    }
+
+    protected function getOptions(): array|RawJs|null
+    {
+        return RawJs::make(<<<'JS'
+            {
+                scales: {
+                    x: {
+                        ticks: {
+                            callback: function(value, index, ticks) {
+                                const limit = 5;
+                                const v = this.getLabelForValue(value);
+
+                                if (v.length > limit) return v.slice(0, limit) + '...';
+                                return v;
+                            }
+                        }
+                    }
+                }
+            }
+        JS);
     }
 
     protected function getType(): string
