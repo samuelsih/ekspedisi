@@ -60,6 +60,7 @@ class SurveyResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultSort('created_at', 'desc')
             ->columns([
                 Tables\Columns\TextColumn::make('index')->label('No.')->rowIndex(),
                 Tables\Columns\TextColumn::make('customer.id_customer')->label('ID Customer')->searchable(),
