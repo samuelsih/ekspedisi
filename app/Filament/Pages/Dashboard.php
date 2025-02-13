@@ -4,11 +4,11 @@ namespace App\Filament\Pages;
 
 use App\Filament\Widgets\BottomPointCustomer;
 use App\Filament\Widgets\ChannelStats;
-use App\Filament\Widgets\TopPointCustomer;
 use App\Filament\Widgets\RatingQuestion;
 use App\Filament\Widgets\TopAvgCustomerSurveySubmit;
 use App\Filament\Widgets\TopBestDriver;
 use App\Filament\Widgets\TopDriverTable;
+use App\Filament\Widgets\TopPointCustomer;
 use App\Filament\Widgets\TopWorstDriver;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Section;
@@ -50,7 +50,7 @@ class Dashboard extends BaseDashboard
                 Section::make()
                     ->schema([
                         DatePicker::make('startDate'),
-                        DatePicker::make('endDate')
+                        DatePicker::make('endDate'),
                     ])
                     ->columns(2),
             ]);

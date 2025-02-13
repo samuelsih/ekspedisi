@@ -6,7 +6,6 @@ use App\Http\Controllers\OverridedDownloadExportController;
 use Filament\Actions\Exports\Http\Controllers\DownloadExport;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider

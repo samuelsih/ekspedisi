@@ -34,7 +34,7 @@ class SurveyController extends Controller
             'title' => $title,
             'subtitle' => $subtitle,
             'questions' => $questions,
-            'channels' => $channels
+            'channels' => $channels,
         ]);
     }
 
@@ -48,13 +48,13 @@ class SurveyController extends Controller
             ->where('driver_id', $validated['driverId'])
             ->exists();
 
-        if($exists) {
-            return response()->json(['message' => "Survey untuk supir ini hanya bisa dilakukan 1 kali sehari"], 400);
+        if ($exists) {
+            return response()->json(['message' => 'Survey untuk supir ini hanya bisa dilakukan 1 kali sehari'], 400);
         }
 
         try {
             $file = $request->file('image');
-            $fileName = str()->random(40) . '.' . $file->getClientOriginalExtension();
+            $fileName = str()->random(40).'.'.$file->getClientOriginalExtension();
             $path = Storage::disk('s3')->putFileAs('validation', $file, $fileName, 'public');
             $imageURL = Storage::disk('s3')->url($path);
         } catch (Exception $e) {
@@ -75,7 +75,7 @@ class SurveyController extends Controller
             $now = now();
 
             $questions = array_map(
-                fn($value, $key) => [
+                fn ($value, $key) => [
                     'id' => str()->ulid(),
                     'question_id' => $key,
                     'value' => $value,
@@ -88,9 +88,9 @@ class SurveyController extends Controller
 
             DB::table('survey_answers')->insert($questions);
             DB::commit();
-        } catch(QueryException $e) {
+        } catch (QueryException $e) {
             DB::rollBack();
-            if ($e->getCode() == "23000") {
+            if ($e->getCode() == '23000') {
                 $errorMessage = $e->getMessage();
                 if (str_contains($errorMessage, 'question_id')) {
                     return response()->json(['message' => 'Terdapat pertanyaan yang tidak diketahui'], 400);
@@ -98,7 +98,7 @@ class SurveyController extends Controller
             }
 
             return response()->json(['message' => $e->getMessage()], 400);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
         }
 

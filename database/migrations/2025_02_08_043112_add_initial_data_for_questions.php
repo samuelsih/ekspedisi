@@ -7,14 +7,14 @@ use Illuminate\Database\Migrations\Migration;
 return new class extends Migration
 {
     private array $supirData = [
-        "Sopir datang dengan keadaan rapi (memakai seragam dan sepatu tertutup) !",
-        "Sopir tidak meminta atau menerima imbalan dalam bentuk apapun dari customer"
+        'Sopir datang dengan keadaan rapi (memakai seragam dan sepatu tertutup) !',
+        'Sopir tidak meminta atau menerima imbalan dalam bentuk apapun dari customer',
     ];
 
     private array $tokoData = [
-        "Sopir memberikan senyum, salam, dan sapa",
-        "Sopir mengirim jumlah barang sesuai dengan Faktur pengiriman",
-        "Sopir memberikan barang dengan kualitas yang baik dan tidak rusak",
+        'Sopir memberikan senyum, salam, dan sapa',
+        'Sopir mengirim jumlah barang sesuai dengan Faktur pengiriman',
+        'Sopir memberikan barang dengan kualitas yang baik dan tidak rusak',
     ];
 
     /**
@@ -22,7 +22,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        foreach($this->supirData as $title) {
+        foreach ($this->supirData as $title) {
             Question::query()->create([
                 'title' => $title,
                 'is_active' => true,
@@ -30,7 +30,7 @@ return new class extends Migration
             ]);
         }
 
-        foreach($this->tokoData as $title) {
+        foreach ($this->tokoData as $title) {
             Question::query()->create([
                 'title' => $title,
                 'is_active' => true,
@@ -44,11 +44,11 @@ return new class extends Migration
      */
     public function down(): void
     {
-        foreach($this->tokoData as $title) {
+        foreach ($this->tokoData as $title) {
             Question::query()->where('title', $title)->delete();
         }
 
-        foreach($this->supirData as $title) {
+        foreach ($this->supirData as $title) {
             Question::query()->where('title', $title)->delete();
         }
     }

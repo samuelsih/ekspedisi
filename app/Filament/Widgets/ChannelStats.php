@@ -26,7 +26,7 @@ class ChannelStats extends BaseWidget
             ->withCount([
                 'surveys' => fn (QueryBuilder $q) => $q
                     ->when($start, fn (QueryBuilder $q) => $q->whereDate('created_at', '>=', $start))
-                    ->when($end, fn (QueryBuilder $q) => $q->whereDate('created_at', '<=', $end))
+                    ->when($end, fn (QueryBuilder $q) => $q->whereDate('created_at', '<=', $end)),
             ])
             ->get();
 

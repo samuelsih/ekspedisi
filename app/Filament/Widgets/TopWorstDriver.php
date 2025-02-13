@@ -30,7 +30,7 @@ class TopWorstDriver extends ChartWidget
         $drivers = Driver::query()
             ->withAvg(['survey_answers' => fn (QueryBuilder $q) => $q
                 ->when($start, fn (QueryBuilder $q) => $q->whereDate('survey_answers.created_at', '>=', $start))
-                ->when($end, fn (QueryBuilder $q) => $q->whereDate('survey_answers.created_at', '<=', $end))
+                ->when($end, fn (QueryBuilder $q) => $q->whereDate('survey_answers.created_at', '<=', $end)),
             ], 'value')
             ->orderBy('survey_answers_avg_value', 'asc')
             ->limit(5)
@@ -42,7 +42,7 @@ class TopWorstDriver extends ChartWidget
                     'label' => 'Questions',
                     'data' => $drivers->pluck('survey_answers_avg_value')->toArray(),
                     'backgroundColor' => $this->colors,
-                ]
+                ],
             ],
             'labels' => $drivers->pluck('name')->toArray(),
         ];

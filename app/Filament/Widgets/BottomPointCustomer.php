@@ -23,21 +23,21 @@ class BottomPointCustomer extends ChartWidget
             ->withCount([
                 'surveys' => fn (QueryBuilder $q) => $q
                     ->when($start, fn (QueryBuilder $q) => $q->whereDate('surveys.created_at', '>=', $start))
-                    ->when($end, fn (QueryBuilder $q) => $q->whereDate('surveys.created_at', '<=', $end))
+                    ->when($end, fn (QueryBuilder $q) => $q->whereDate('surveys.created_at', '<=', $end)),
             ])
             ->limit(10)
             ->orderBy('surveys_count', 'asc')
             ->get();
 
-            return [
-                'datasets' => [
-                    [
-                        'label' => 'Poin',
-                        'data' => $customers->pluck('surveys_count')->toArray(),
-                    ],
+        return [
+            'datasets' => [
+                [
+                    'label' => 'Poin',
+                    'data' => $customers->pluck('surveys_count')->toArray(),
                 ],
-                'labels' => $customers->map(fn ($customer) => "{$customer->name}")->toArray(),
-            ];
+            ],
+            'labels' => $customers->map(fn ($customer) => "{$customer->name}")->toArray(),
+        ];
     }
 
     protected function getOptions(): array|RawJs|null

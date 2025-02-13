@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('drivers', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->string('nik');
-            $table->string('name'); 
+            $table->string('name');
             $table->timestamps();
         });
     }

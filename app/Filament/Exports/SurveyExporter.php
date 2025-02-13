@@ -19,7 +19,7 @@ class SurveyExporter extends Exporter
 
         $stats = [];
 
-        $questions->each(function (Question $question) use(&$stats) {
+        $questions->each(function (Question $question) use (&$stats) {
             $name = $question->name;
 
             $stats[] = ExportColumn::make("question_target_{$name}")
@@ -46,10 +46,10 @@ class SurveyExporter extends Exporter
 
     public static function getCompletedNotificationBody(Export $export): string
     {
-        $body = 'Your survey export has completed and ' . number_format($export->successful_rows) . ' ' . str('row')->plural($export->successful_rows) . ' exported.';
+        $body = 'Your survey export has completed and '.number_format($export->successful_rows).' '.str('row')->plural($export->successful_rows).' exported.';
 
         if ($failedRowsCount = $export->getFailedRowsCount()) {
-            $body .= ' ' . number_format($failedRowsCount) . ' ' . str('row')->plural($failedRowsCount) . ' failed to export.';
+            $body .= ' '.number_format($failedRowsCount).' '.str('row')->plural($failedRowsCount).' failed to export.';
         }
 
         return $body;

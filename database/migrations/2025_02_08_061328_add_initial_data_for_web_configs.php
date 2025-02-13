@@ -6,8 +6,8 @@ use Illuminate\Database\Migrations\Migration;
 return new class extends Migration
 {
     private array $data = [
-        "Sub judul halaman survey" => "Form survey Ekspedisi JTA",
-        "Judul halaman survey" => "Survey",
+        'Sub judul halaman survey' => 'Form survey Ekspedisi JTA',
+        'Judul halaman survey' => 'Survey',
     ];
 
     /**

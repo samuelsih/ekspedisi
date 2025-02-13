@@ -30,7 +30,7 @@ class TopAvgCustomerSurveySubmit extends ChartWidget
         $customers = Customer::query()
             ->withAvg(['survey_answers' => fn (QueryBuilder $q) => $q
                 ->when($start, fn (QueryBuilder $q) => $q->whereDate('survey_answers.created_at', '>=', $start))
-                ->when($end, fn (QueryBuilder $q) => $q->whereDate('survey_answers.created_at', '<=', $end))
+                ->when($end, fn (QueryBuilder $q) => $q->whereDate('survey_answers.created_at', '<=', $end)),
             ], 'value')
             ->limit(10)
             ->orderByDesc('survey_answers_avg_value')

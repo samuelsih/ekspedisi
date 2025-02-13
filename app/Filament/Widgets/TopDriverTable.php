@@ -26,9 +26,9 @@ class TopDriverTable extends BaseWidget
             ->query(fn (Driver $driver) => $driver
                 ->withAvg(['survey_answers' => fn (QueryBuilder $q) => $q
                     ->when($start, fn (QueryBuilder $q) => $q->whereDate('survey_answers.created_at', '>=', $start))
-                    ->when($end, fn (QueryBuilder $q) => $q->whereDate('survey_answers.created_at', '<=', $end))
+                    ->when($end, fn (QueryBuilder $q) => $q->whereDate('survey_answers.created_at', '<=', $end)),
                 ], 'value')
-            ->orderByDesc('survey_answers_avg_value'))
+                ->orderByDesc('survey_answers_avg_value'))
             ->columns([
                 Tables\Columns\TextColumn::make('index')->label('No.')->rowIndex(),
                 Tables\Columns\TextColumn::make('nik')->label('NIK Supir')->searchable(),

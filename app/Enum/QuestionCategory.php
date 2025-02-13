@@ -4,8 +4,8 @@ namespace App\Enum;
 
 enum QuestionCategory: string
 {
-    case SUPIR = "Supir";
-    case TOKO = "Toko";
+    case SUPIR = 'Supir';
+    case TOKO = 'Toko';
 
     public static function values()
     {

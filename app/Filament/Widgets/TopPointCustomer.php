@@ -23,7 +23,7 @@ class TopPointCustomer extends ChartWidget
             ->withCount([
                 'surveys' => fn (QueryBuilder $q) => $q
                     ->when($start, fn (QueryBuilder $q) => $q->whereDate('surveys.created_at', '>=', $start))
-                    ->when($end, fn (QueryBuilder $q) => $q->whereDate('surveys.created_at', '<=', $end))
+                    ->when($end, fn (QueryBuilder $q) => $q->whereDate('surveys.created_at', '<=', $end)),
             ])
             ->limit(10)
             ->orderByDesc('surveys_count')

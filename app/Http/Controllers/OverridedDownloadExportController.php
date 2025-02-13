@@ -30,7 +30,6 @@ class OverridedDownloadExportController extends Controller
 
         $url = Storage::disk('s3')->temporaryUrl($s3Path, $expiration);
 
-
         return response()->redirectTo($url);
     }
 }

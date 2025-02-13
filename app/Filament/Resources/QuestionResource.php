@@ -3,15 +3,12 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\QuestionResource\Pages;
-use App\Filament\Resources\QuestionResource\RelationManagers;
 use App\Models\Question;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class QuestionResource extends Resource
 {
@@ -30,8 +27,8 @@ class QuestionResource extends Resource
                 Forms\Components\Select::make('is_active')
                     ->label('Status')
                     ->options([
-                        true => "Active",
-                        false => "Not Active"
+                        true => 'Active',
+                        false => 'Not Active',
                     ])
                     ->required(),
             ]);
@@ -46,7 +43,7 @@ class QuestionResource extends Resource
                 Tables\Columns\TextColumn::make('title'),
                 Tables\Columns\TextColumn::make('is_active')
                     ->label('Status')
-                    ->formatStateUsing(fn ($state) => $state ? "Active" : "Not Active"),
+                    ->formatStateUsing(fn ($state) => $state ? 'Active' : 'Not Active'),
             ])
             ->filters([
                 //

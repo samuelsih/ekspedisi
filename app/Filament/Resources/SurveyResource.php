@@ -4,9 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Exports\SurveyExporter;
 use App\Filament\Resources\SurveyResource\Pages;
-use App\Filament\Resources\SurveyResource\RelationManagers;
 use App\Models\Survey;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Infolists;
 use Filament\Infolists\Infolist;
@@ -14,9 +12,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\ExportAction;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class SurveyResource extends Resource
 {
@@ -52,7 +48,7 @@ class SurveyResource extends Resource
                             ->map(fn ($answer) => "| **{$answer->question->title}** | {$answer->value} |")
                             ->implode("\n");
 
-                        return "| **Question** | **Answer** |\n|---|---|\n" . $answers;
+                        return "| **Question** | **Answer** |\n|---|---|\n".$answers;
                     }),
                 Infolists\Components\ImageEntry::make('img_url')->label('Validasi Gambar')
                     ->width(400)
@@ -72,7 +68,7 @@ class SurveyResource extends Resource
                 Tables\Columns\TextColumn::make('driver.nik')->label('NIK Supir')->searchable(),
                 Tables\Columns\TextColumn::make('driver.name')->label('Nama Supir')->searchable(),
                 Tables\Columns\ImageColumn::make('img_url')
-                    ->label("Validasi Gambar")
+                    ->label('Validasi Gambar')
                     ->square()
                     ->size(100),
             ])

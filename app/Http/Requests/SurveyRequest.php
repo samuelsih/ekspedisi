@@ -16,7 +16,7 @@ class SurveyRequest extends FormRequest
 
     protected function prepareForValidation()
     {
-        if($this->has('questions')) {
+        if ($this->has('questions')) {
             $this->merge([
                 'questions' => json_decode($this->questions, true),
             ]);
