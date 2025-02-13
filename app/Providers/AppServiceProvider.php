@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Http\Controllers\OverridedDownloadExportController;
+use Filament\Actions\Exports\Http\Controllers\DownloadExport;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Vite;
@@ -14,7 +16,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(DownloadExport::class, OverridedDownloadExportController::class);
     }
 
     /**
