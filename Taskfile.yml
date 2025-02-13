@@ -6,6 +6,7 @@ tasks:
       - git pull
       - php artisan migrate
       - npm run build
+      - sudo systemctl restart ekspedisi-queue
       - sudo systemctl status ekspedisi-queue
 
   push:

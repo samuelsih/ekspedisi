@@ -60,14 +60,8 @@ class SurveyExporter extends Exporter
         return now()->addDay();
     }
 
-    public static function getDisk(): ?string
+    public function getFileDisk(): string
     {
-        return 's3';
+        return 'local';
     }
-
-    public static function getDownloadUrl(Export $export): ?string
-    {
-        return Storage::disk('s3')->url($export->file_path);
-    }
-
 }
