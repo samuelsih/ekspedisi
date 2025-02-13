@@ -59,9 +59,4 @@ class SurveyExporter extends Exporter
     {
         return now()->addDay();
     }
-
-    public function getFileDisk(): string
-    {
-        return 'export';
-    }
 }

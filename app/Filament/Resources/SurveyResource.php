@@ -94,7 +94,7 @@ class SurveyResource extends Resource
                 ]),
             ])
             ->headerActions([
-                ExportAction::make()->exporter(SurveyExporter::class)->fileDisk('export'),
+                ExportAction::make()->exporter(SurveyExporter::class),
             ]);
     }
 
