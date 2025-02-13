@@ -58,8 +58,7 @@ class SurveyController extends Controller
             $path = Storage::disk('s3')->putFileAs('validation', $file, $fileName, 'public');
             $imageURL = Storage::disk('s3')->url($path);
         } catch (Exception $e) {
-
-            return response()->json(['message' => $e->getMessage()], 400);
+            return response()->json(['message' => 'Gagal mengunggah gambar. Coba beberapa saat lagi'], 500);
         }
 
         try {
@@ -97,9 +96,9 @@ class SurveyController extends Controller
                 }
             }
 
-            return response()->json(['message' => $e->getMessage()], 400);
+            return response()->json(['message' => 'Gagal menyimpan data. Coba beberapa saat lagi'], 500);
         } catch (Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 400);
+            return response()->json(['message' => 'Gagal menyimpan data. Coba beberapa saat lagi'], 500);
         }
 
         return response()->json(['message' => 'OK'], 201);

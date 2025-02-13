@@ -139,7 +139,7 @@ export default function Survey({ title, subtitle, questions, channels }: Props) 
                         toast({
                             variant: "destructive",
                             title: "Gagal Memasukkan Data",
-                            description: "Terdapat kesalahan pada server, silakan coba lagi beberapa saat",
+                            description: error.response?.data?.message ?? "Terdapat kesalahan pada server. Silakan coba beberapa saat lagi",
                         })
                         break;
                 }
