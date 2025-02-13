@@ -5,18 +5,32 @@ namespace App\Filament\Widgets;
 use App\Models\Driver;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Filament\Widgets\TableWidget as BaseWidget;
+use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 
 class TopDriverTable extends BaseWidget
 {
+    use InteractsWithPageFilters;
+
+    protected int | string | array $columnSpan = 'full';
+
     protected static ?string $model = Driver::class;
 
     protected static ?string $heading = 'Top Driver By Rating';
 
     public function table(Table $table): Table
     {
+        $start = $this->filters['startDate'];
+        $end = $this->filters['endDate'];
+
         return $table
-            ->query(fn (Driver $driver) => $driver->withAvg('survey_answers', 'value')->orderByDesc('survey_answers_avg_value'))
+            ->query(fn (Driver $driver) => $driver
+                ->withAvg(['survey_answers' => fn (QueryBuilder $q) => $q
+                    ->when($start, fn (QueryBuilder $q) => $q->whereDate('survey_answers.created_at', '>=', $start))
+                    ->when($end, fn (QueryBuilder $q) => $q->whereDate('survey_answers.created_at', '<=', $end))
+                ], 'value')
+            ->orderByDesc('survey_answers_avg_value'))
             ->columns([
                 Tables\Columns\TextColumn::make('index')->label('No.')->rowIndex(),
                 Tables\Columns\TextColumn::make('nik')->label('NIK Supir')->searchable(),

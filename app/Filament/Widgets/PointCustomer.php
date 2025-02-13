@@ -4,15 +4,28 @@ namespace App\Filament\Widgets;
 
 use App\Models\Customer;
 use Filament\Widgets\ChartWidget;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
+use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 
 class PointCustomer extends ChartWidget
 {
+    use InteractsWithPageFilters;
+
     protected static ?string $heading = 'Poin Customer';
+
+    protected int | string | array $columnSpan = 'full';
 
     protected function getData(): array
     {
+        $start = $this->filters['startDate'];
+        $end = $this->filters['endDate'];
+
         $customers = Customer::query()
-            ->withCount('surveys')
+            ->withCount([
+                'surveys' => fn (QueryBuilder $q) => $q
+                    ->when($start, fn (QueryBuilder $q) => $q->whereDate('surveys.created_at', '>=', $start))
+                    ->when($end, fn (QueryBuilder $q) => $q->whereDate('surveys.created_at', '<=', $end))
+            ])
             ->limit(10)
             ->orderByDesc('surveys_count')
             ->get();

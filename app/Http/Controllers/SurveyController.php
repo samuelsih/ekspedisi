@@ -72,8 +72,16 @@ class SurveyController extends Controller
             ]);
 
             $questions = $validated['questions'];
+            $now = now();
+
             $questions = array_map(
-                fn($value, $key) => ['id' => str()->ulid(), 'question_id' => $key, 'value' => $value, 'survey_id' => $survey->id],
+                fn($value, $key) => [
+                    'id' => str()->ulid(),
+                    'question_id' => $key,
+                    'value' => $value,
+                    'survey_id' => $survey->id,
+                    'created_at' => $now,
+                ],
                 $questions,
                 array_keys($questions),
             );
