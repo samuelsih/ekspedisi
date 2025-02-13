@@ -66,8 +66,12 @@ class TopWorstDriver extends ChartWidget
                                     result.push(text.substring(i, i + limit));
                                 }
 
-                                result[result.length - 1] += ' (' + value.toFixed(3) + ')';
-                                return result;
+                                function formatNumber(number) {
+                                    let rounded = Number(number.toFixed(3));
+                                    return Number.isInteger(rounded) ? rounded : rounded;
+                                }
+
+                                result[result.length - 1] += ' (' + formatNumber(value) + ')';
                             }
                         }
                     },
