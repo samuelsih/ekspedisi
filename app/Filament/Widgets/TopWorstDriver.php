@@ -13,8 +13,6 @@ class TopWorstDriver extends ChartWidget
 
     protected static ?string $heading = 'Worst 5 Driver';
 
-    protected int | string | array $columnSpan = 'full';
-
     private array $colors = [
         'rgb(255, 99, 132)',  // Merah muda
         'rgb(54, 162, 235)',  // Biru muda

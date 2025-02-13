@@ -1,0 +1,9 @@
+version: '2'
+
+tasks:
+  default:
+    cmds:
+      - git pull
+      - php artisan migrate
+      - npm run build
+      - sudo systemctl status ekspedisi-queue

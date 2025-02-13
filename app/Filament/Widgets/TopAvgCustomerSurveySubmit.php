@@ -11,9 +11,7 @@ class TopAvgCustomerSurveySubmit extends ChartWidget
 {
     use InteractsWithPageFilters;
 
-    protected static ?string $heading = 'Top 5 Highest Average Customer Survey Answers';
-
-    protected int | string | array $columnSpan = 'full';
+    protected static ?string $heading = 'Highest Avg Customer Survey Answers';
 
     private array $colors = [
         'rgb(255, 99, 132)',  // Merah muda

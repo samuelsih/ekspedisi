@@ -13,8 +13,6 @@ class TopDriverTable extends BaseWidget
 {
     use InteractsWithPageFilters;
 
-    protected int | string | array $columnSpan = 'full';
-
     protected static ?string $model = Driver::class;
 
     protected static ?string $heading = 'Top Driver By Rating';

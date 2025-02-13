@@ -7,13 +7,11 @@ use Filament\Widgets\ChartWidget;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 
-class PointCustomer extends ChartWidget
+class TopPointCustomer extends ChartWidget
 {
     use InteractsWithPageFilters;
 
-    protected static ?string $heading = 'Poin Customer';
-
-    protected int | string | array $columnSpan = 'full';
+    protected static ?string $heading = 'Top 5 Poin Customer';
 
     protected function getData(): array
     {
