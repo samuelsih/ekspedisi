@@ -3,6 +3,7 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Question;
+use Filament\Support\RawJs;
 use Filament\Widgets\ChartWidget;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
@@ -49,6 +50,35 @@ class RatingQuestion extends ChartWidget
             ],
             'labels' => $questions->pluck('title')->toArray(),
         ];
+    }
+
+    protected function getOptions(): array|RawJs|null
+    {
+        return RawJs::make(<<<'JS'
+            {
+                plugins: {
+                    legend: {
+                        display: true,
+                        labels: {
+                            generateLabels: function (chart) {
+                                const limit = 1;
+                                const data = chart.data;
+                                if(data.labels.length && data.datasets.length) {
+                                    return data.labels.map(function(label, i) {
+                                        const formattedLabel = label.length > limit ? label.slice(0, limit) + '...' : label;
+                                        return {
+                                            text: formattedLabel,
+                                            fillStyle: data.datasets[0].backgroundColor[i]
+                                        }
+                                    })
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+        JS);
     }
 
     protected function getType(): string
