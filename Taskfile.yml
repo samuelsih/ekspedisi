@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 
 tasks:
   default:
@@ -7,3 +7,9 @@ tasks:
       - php artisan migrate
       - npm run build
       - sudo systemctl status ekspedisi-queue
+
+  push:
+    cmds:
+      - git add .
+      - git commit -m {{ .CLI_ARGS }}
+      - git push

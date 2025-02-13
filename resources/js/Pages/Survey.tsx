@@ -12,6 +12,7 @@ import CameraScreenshot from "@/components/CameraScreenshot";
 import { Toaster } from "@/components/ui/toaster"
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
 
 const formSchema = z.object({
     customerId: z.string({ message: "ID Customer tidak boleh kosong" }).nonempty("ID Customer tidak boleh kosong"),
@@ -72,10 +73,6 @@ interface Driver {
     name: string;
 }
 
-interface GenericResponse {
-    message: string;
-}
-
 export default function Survey({ title, subtitle, questions, channels }: Props) {
     const { toast } = useToast()
     const onPermissionDenied = () => {
@@ -107,6 +104,7 @@ export default function Survey({ title, subtitle, questions, channels }: Props) 
     }
 
     const [imgBlob, setImgBlob] = useState<Blob | null>(null)
+    const [isSubmit, setIsSubmit] = useState(false)
 
     const handleSubmit = async (schema: SurveySchema) => {
         const formData = new FormData()
@@ -117,6 +115,7 @@ export default function Survey({ title, subtitle, questions, channels }: Props) 
         formData.append("image", imgBlob!, "screenshot.jpg")
 
         try {
+            setIsSubmit(true)
             await axios.postForm("/survey", formData)
             toast({
                 title: "Berhasil",
@@ -145,6 +144,8 @@ export default function Survey({ title, subtitle, questions, channels }: Props) 
                         break;
                 }
             }
+        } finally {
+            setIsSubmit(false)
         }
     }
 
@@ -160,10 +161,11 @@ export default function Survey({ title, subtitle, questions, channels }: Props) 
                 {subtitle}
             </h3>
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8 max-w-3xl mx-auto py-10">
+                <form onSubmit={form.handleSubmit(handleSubmit)} className="border border-solid border-black space-y-8 max-w-3xl mx-auto py-10 p-4 mt-4">
                 <FormField
                     control={form.control}
                     name="customerId"
+                    disabled={isSubmit}
                     render={({ field }) => (
                         <Selector
                             searchKey="customer"
@@ -264,7 +266,7 @@ export default function Survey({ title, subtitle, questions, channels }: Props) 
                     />
                 ))}
 
-                <Button type="submit" className="w-full">Kirim</Button>
+                <Button type="submit" className="w-full" disabled={isSubmit}>Kirim</Button>
                 </form>
             </Form>
         </div>
