@@ -9,8 +9,8 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\ExportAction;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\HtmlString;
 
@@ -56,7 +56,9 @@ class SurveyResource extends Resource
                     ->size(100),
             ])
             ->filters([
-                //
+                SelectFilter::make('channel_id')
+                    ->relationship('channel', 'name')
+                    ->label('Channel'),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
