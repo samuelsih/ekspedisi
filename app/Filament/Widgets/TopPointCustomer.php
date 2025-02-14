@@ -20,6 +20,7 @@ class TopPointCustomer extends ChartWidget
         $end = $this->filters['endDate'];
 
         $customers = Customer::query()
+            ->select(['name'])
             ->withCount([
                 'surveys' => fn (QueryBuilder $q) => $q
                     ->when($start, fn (QueryBuilder $q) => $q->whereDate('surveys.created_at', '>=', $start))

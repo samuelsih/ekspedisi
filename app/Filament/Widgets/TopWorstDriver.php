@@ -28,13 +28,14 @@ class TopWorstDriver extends ChartWidget
         $end = $this->filters['endDate'];
 
         $drivers = Driver::query()
+            ->select(['name'])
             ->withAvg(['survey_answers' => fn (QueryBuilder $q) => $q
                 ->when($start, fn (QueryBuilder $q) => $q->whereDate('survey_answers.created_at', '>=', $start))
                 ->when($end, fn (QueryBuilder $q) => $q->whereDate('survey_answers.created_at', '<=', $end)),
             ], 'value')
             ->orderBy('survey_answers_avg_value', 'asc')
             ->limit(5)
-            ->get();
+            ->get(['name']);
 
         return [
             'datasets' => [

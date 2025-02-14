@@ -24,6 +24,7 @@ class TopDriverTable extends BaseWidget
 
         return $table
             ->query(fn (Driver $driver) => $driver
+                ->select(['id', 'nik', 'name'])
                 ->withAvg(['survey_answers' => fn (QueryBuilder $q) => $q
                     ->when($start, fn (QueryBuilder $q) => $q->whereDate('survey_answers.created_at', '>=', $start))
                     ->when($end, fn (QueryBuilder $q) => $q->whereDate('survey_answers.created_at', '<=', $end)),

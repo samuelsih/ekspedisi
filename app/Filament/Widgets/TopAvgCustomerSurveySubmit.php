@@ -28,6 +28,7 @@ class TopAvgCustomerSurveySubmit extends ChartWidget
         $end = $this->filters['endDate'];
 
         $customers = Customer::query()
+            ->select(['name'])
             ->withAvg(['survey_answers' => fn (QueryBuilder $q) => $q
                 ->when($start, fn (QueryBuilder $q) => $q->whereDate('survey_answers.created_at', '>=', $start))
                 ->when($end, fn (QueryBuilder $q) => $q->whereDate('survey_answers.created_at', '<=', $end)),
