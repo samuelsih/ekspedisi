@@ -2,13 +2,11 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Exports\SurveyExporter;
 use App\Filament\Resources\SurveyResource\Pages;
 use App\Models\Survey;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Actions\ExportAction;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
@@ -104,9 +102,7 @@ class SurveyResource extends Resource
                 ]),
             ])
             ->headerActions([
-                ExportAction::make()
-                    ->exporter(SurveyExporter::class)
-                    ->color('primary'),
+                //
             ]);
     }
 
