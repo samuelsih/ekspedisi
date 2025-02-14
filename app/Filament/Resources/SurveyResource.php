@@ -6,8 +6,6 @@ use App\Filament\Exports\SurveyExporter;
 use App\Filament\Resources\SurveyResource\Pages;
 use App\Models\Survey;
 use Filament\Forms\Form;
-use Filament\Infolists;
-use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\ExportAction;
@@ -30,41 +28,20 @@ class SurveyResource extends Resource
             ]);
     }
 
-    // public static function infolist(Infolist $infolist): Infolist
-    // {
-    //     return $infolist
-    //         ->schema([
-    //             Infolists\Components\TextEntry::make('customer.id_customer')->label('ID Customer'),
-    //             Infolists\Components\TextEntry::make('customer.name')->label('Nama Customer'),
-    //             Infolists\Components\TextEntry::make('channel.name')->label('Channel'),
-    //             Infolists\Components\TextEntry::make('driver.nik')->label('NIK Supir'),
-    //             Infolists\Components\TextEntry::make('driver.name')->label('Nama Supir')
-    //                 ->columnSpanFull(),
-    //             Infolists\Components\TextEntry::make('survey')
-    //                 ->label('Survey')
-    //                 ->markdown()
-    //                 ->getStateUsing(function (Survey $record): string {
-    //                     $answers = $record
-    //                         ->loadMissing('survey_answers.question')
-    //                         ->survey_answers
-    //                         ->map(fn ($answer) => "| **{$answer->question->title}** | {$answer->value} |")
-    //                         ->implode("\n");
-
-    //                     return "| **Question** | **Answer** |\n|---|---|\n".$answers;
-    //                 }),
-    //             Infolists\Components\ImageEntry::make('img_url')->label('Validasi Gambar')
-    //                 ->width(400)
-    //                 ->height(400),
-    //         ])
-    //         ->columns(2);
-    // }
-
     public static function table(Table $table): Table
     {
         return $table
             ->defaultSort('created_at', 'desc')
-            ->modifyQueryUsing(function (Builder $query) {
-                return $query->with('survey_answers.question');
+            ->query(function () {
+                return Survey::query()
+                    ->with([
+                        'survey_answers:question_id,survey_id,value',
+                        'survey_answers.question:id,title',
+                        'customer:id,id_customer,name',
+                        'channel:id,name',
+                        'driver:id,nik,name',
+                    ])
+                    ->select(['id', 'customer_id', 'channel_id', 'driver_id', 'img_url', 'created_at', 'deleted_at']);
             })
             ->columns([
                 Tables\Columns\TextColumn::make('index')->label('No.')->rowIndex(),
@@ -102,7 +79,7 @@ class SurveyResource extends Resource
                                     </div>
                                 </td>
                             </tr>
-                        ")->implode("");
+                        ")->implode('');
 
                         return new HtmlString("
                             <table>

@@ -9,6 +9,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class CustomerResource extends Resource
 {
@@ -43,6 +44,9 @@ class CustomerResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->query(function () {
+                return Customer::query()->select(['id', 'id_customer', 'name', 'created_at', 'deleted_at']);
+            })
             ->defaultSort('created_at', 'desc')
             ->columns([
                 Tables\Columns\TextColumn::make('index')->label('No.')->rowIndex(),

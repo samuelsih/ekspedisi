@@ -48,6 +48,9 @@ class UserResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->query(function () {
+                return User::query()->select(['id', 'name', 'email', 'created_at']);
+            })
             ->defaultSort('created_at', 'desc')
             ->columns([
                 Tables\Columns\TextColumn::make('index')->label('No.')->rowIndex(),

@@ -37,6 +37,9 @@ class QuestionResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->query(function () {
+                return Question::query()->select(['id', 'title', 'is_active', 'created_at', 'deleted_at']);
+            })
             ->defaultSort('created_at', 'desc')
             ->columns([
                 Tables\Columns\TextColumn::make('index')->label('No.')->rowIndex(),

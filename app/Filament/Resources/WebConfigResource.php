@@ -36,6 +36,9 @@ class WebConfigResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->query(function () {
+                return WebConfig::query()->select(['id', 'name', 'value', 'created_at']);
+            })
             ->defaultSort('created_at', 'desc')
             ->columns([
                 Tables\Columns\TextColumn::make('index')->label('No.')->rowIndex(),

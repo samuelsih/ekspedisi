@@ -42,6 +42,9 @@ class DriverResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->query(function () {
+                return Driver::query()->select(['id', 'nik', 'name', 'created_at', 'deleted_at']);
+            })
             ->defaultSort('created_at', 'desc')
             ->columns([
                 Tables\Columns\TextColumn::make('index')->label('No.')->rowIndex(),
