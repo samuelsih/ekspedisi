@@ -62,10 +62,6 @@ class SurveyResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
-                    ->after(function (Survey $record) {
-                        $record->survey_answers()->delete();
-                    }),
                 Tables\Actions\Action::make('view_survey_answers')
                     ->color('primary')
                     ->modal()
