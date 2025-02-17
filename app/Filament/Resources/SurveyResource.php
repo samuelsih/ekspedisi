@@ -39,7 +39,8 @@ class SurveyResource extends Resource
                         'channel:id,name',
                         'driver:id,nik,name',
                     ])
-                    ->select(['id', 'customer_id', 'channel_id', 'driver_id', 'img_url', 'created_at', 'deleted_at']);
+                    ->select(['id', 'customer_id', 'channel_id', 'driver_id', 'img_url', 'created_at', 'deleted_at'])
+                    ->whereNotNull(['customer_id', 'channel_id', 'driver_id']);
             })
             ->columns([
                 Tables\Columns\TextColumn::make('index')->label('No.')->rowIndex(),
@@ -61,6 +62,10 @@ class SurveyResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->after(function (Survey $record) {
+                        $record->survey_answers()->delete();
+                    }),
                 Tables\Actions\Action::make('view_survey_answers')
                     ->color('primary')
                     ->modal()

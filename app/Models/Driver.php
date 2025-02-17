@@ -10,6 +10,11 @@ class Driver extends Model
 {
     use HasUlids, SoftDeletes;
 
+    public function surveys()
+    {
+        return $this->hasMany(Survey::class);
+    }
+
     public function survey_answers()
     {
         return $this->hasManyThrough(SurveyAnswer::class, Survey::class);

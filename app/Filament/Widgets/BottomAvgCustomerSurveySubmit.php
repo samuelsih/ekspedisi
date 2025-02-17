@@ -8,11 +8,11 @@ use Filament\Widgets\ChartWidget;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 
-class TopAvgCustomerSurveySubmit extends ChartWidget
+class BottomAvgCustomerSurveySubmit extends ChartWidget
 {
     use InteractsWithPageFilters;
 
-    protected static ?string $heading = 'Highest Avg Customer Survey Answers';
+    protected static ?string $heading = 'Bottom Avg Customer Survey Answers';
 
     private array $colors = [
         'rgb(255, 99, 132)',  // Merah muda
@@ -34,7 +34,7 @@ class TopAvgCustomerSurveySubmit extends ChartWidget
                 ->when($end, fn (QueryBuilder $q) => $q->whereDate('survey_answers.created_at', '<=', $end)),
             ], 'value')
             ->limit(10)
-            ->orderByDesc('survey_answers_avg_value')
+            ->orderBy('survey_answers_avg_value', 'asc')
             ->get();
 
         return [
