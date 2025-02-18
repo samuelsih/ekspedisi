@@ -2,10 +2,10 @@
 
 namespace App\Filament\Pages;
 
+use App\Filament\Widgets\BottomAvgCustomerSurveySubmit;
 use App\Filament\Widgets\BottomPointCustomer;
 use App\Filament\Widgets\ChannelStats;
 use App\Filament\Widgets\RatingQuestion;
-use App\Filament\Widgets\BottomAvgCustomerSurveySubmit;
 use App\Filament\Widgets\TopBestDriver;
 use App\Filament\Widgets\TopDriverTable;
 use App\Filament\Widgets\TopPointCustomer;
