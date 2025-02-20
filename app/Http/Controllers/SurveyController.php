@@ -45,11 +45,10 @@ class SurveyController extends Controller
         $exists = Survey::query()
             ->whereDate('created_at', now()->toDateString())
             ->where('customer_id', $validated['customerId'])
-            ->where('driver_id', $validated['driverId'])
             ->exists();
 
         if ($exists) {
-            return response()->json(['message' => 'Survey untuk supir ini hanya bisa dilakukan 1 kali sehari'], 400);
+            return response()->json(['message' => 'Survey untuk toko ini hanya bisa dilakukan 1 kali sehari'], 400);
         }
 
         try {
