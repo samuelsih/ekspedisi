@@ -31,7 +31,7 @@ class SurveyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'customerId' => ['required', 'exists:customers,id'],
+            'customerId' => ['required'],
             'channelId' => ['required', 'exists:channels,id'],
             'driverId' => ['required', 'exists:drivers,id'],
             'questions' => ['required', 'array'],

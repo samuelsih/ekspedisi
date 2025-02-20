@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-const fiveSeconds = 5000;
+const timeToTakePicInMilliSeconds = 20_000;
 const canvasWidth = 640;
 const canvasHeight = 480;
 
@@ -28,7 +28,7 @@ export default function CameraScreenshot({
                         canvasRef.current.width = canvasWidth;
                         canvasRef.current.height = canvasHeight;
 
-                        setTimeout(captureScreenshot, fiveSeconds);
+                        setTimeout(captureScreenshot, timeToTakePicInMilliSeconds);
                     };
                 }
             } catch (error) {

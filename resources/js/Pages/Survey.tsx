@@ -1,4 +1,4 @@
-import { Head, usePage } from "@inertiajs/react";
+import { Head } from "@inertiajs/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from "zod";
@@ -12,7 +12,8 @@ import CameraScreenshot from "@/components/CameraScreenshot";
 import { Toaster } from "@/components/ui/toaster"
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Input } from "@/components/ui/input";
 
 const formSchema = z.object({
     customerId: z.string({ message: "ID Customer tidak boleh kosong" }).nonempty("ID Customer tidak boleh kosong"),
@@ -149,6 +150,9 @@ export default function Survey({ title, subtitle, questions, channels }: Props) 
         }
     }
 
+    const [isSheetOpen, setIsSheetOpen] = useState(false)
+    const [customCustomerId, setCustomCustomerId] = useState("")
+
     return (
         <div className="container mx-auto p-8">
             <Head title="Survey" />
@@ -161,12 +165,13 @@ export default function Survey({ title, subtitle, questions, channels }: Props) 
                 {subtitle}
             </h3>
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(handleSubmit)} className="border border-solid border-black space-y-8 max-w-3xl mx-auto py-10 p-4 mt-4">
+                <form onSubmit={form.handleSubmit(handleSubmit)} className="border border-solid border-black space-y-4 max-w-3xl mx-auto py-10 p-4 mt-4">
                 <FormField
                     control={form.control}
                     name="customerId"
                     disabled={isSubmit}
                     render={({ field }) => (
+                        <>
                         <Selector
                             searchKey="customer"
                             label="ID Customer"
@@ -187,9 +192,35 @@ export default function Survey({ title, subtitle, questions, channels }: Props) 
                             }}
                             renderDropdownList={(customer: CustomerID) => `${customer.id_customer} (${customer.name})`}
                         />
+                        <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+                            <SheetTrigger asChild>
+                                <button className="text-blue-500 underline text-sm p-0 leading-none">
+                                    ID Customer tidak ditemukan? Tambahkan disini
+                                </button>
+                            </SheetTrigger>
+                            <SheetContent side="bottom">
+                                <SheetHeader className="p-4">
+                                    <SheetTitle>Masukkan Data Baru</SheetTitle>
+                                </SheetHeader>
+                                <div className="p-4 flex-1">
+                                    <Input
+                                        placeholder="Masukkan ID Customer"
+                                        onChange={(e) => setCustomCustomerId(e.target.value)}
+                                        value={customCustomerId}
+                                    />
+                                    <Button className="mt-4" onClick={() => {
+                                        form.setValue("customerId", customCustomerId)
+                                        setIsSheetOpen(false)
+                                    }}>
+                                        Simpan
+                                    </Button>
+                                </div>
+
+                            </SheetContent>
+                        </Sheet>
+                        </>
                     )}
                 />
-
                 <FormField
                     control={form.control}
                     name="channelId"

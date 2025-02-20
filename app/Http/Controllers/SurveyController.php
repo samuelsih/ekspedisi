@@ -62,8 +62,12 @@ class SurveyController extends Controller
 
         try {
             DB::beginTransaction();
+            $customerSurvey = Customer::query()->firstOrCreate([
+                'id_customer' => $validated['customerId'],
+            ]);
+
             $survey = Survey::query()->create([
-                'customer_id' => $validated['customerId'],
+                'customer_id' => $customerSurvey->id,
                 'driver_id' => $validated['driverId'],
                 'channel_id' => $validated['channelId'],
                 'img_url' => $imageURL,
