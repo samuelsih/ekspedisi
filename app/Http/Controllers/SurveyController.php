@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SurveyRequest;
+use App\Http\Requests\SurveyWithoutChannelRequest;
 use App\Models\Channel;
 use App\Models\Customer;
 use App\Models\Driver;
@@ -38,6 +39,52 @@ class SurveyController extends Controller
             'questions' => $questions,
             'channels' => $channels,
         ]);
+    }
+
+    public function indexWithoutChannel()
+    {
+        $questions = Question::query()->where('is_active', true)->get(['id', 'title']);
+
+        $title = WebConfig::query()
+            ->where('name', 'Judul halaman survey')
+            ->first('value')['value'];
+
+        $subtitle = WebConfig::query()
+            ->where('name', 'Sub judul halaman survey')
+            ->first('value')['value'];
+
+        return Inertia::render('SurveyWithoutChannel', [
+            'title' => $title,
+            'subtitle' => $subtitle,
+            'questions' => $questions,
+        ]);
+    }
+
+    public function storeWithoutChannel(SurveyWithoutChannelRequest $request)
+    {
+        $validated = $request->validated();
+
+        $channel = Channel::query()->where('name', 'GT')->first();
+        if(empty($channel)) {
+            return response()->json(['message' => 'Gagal mengambil data. Coba beberapa saat lagi'], 500);
+        }
+
+        $validated['channelId'] = $channel['id'];
+
+        if ($this->service->surveyExistsToday($validated['customerId'])) {
+            return response()->json(['message' => 'Survey untuk toko ini hanya bisa dilakukan 1 kali sehari'], 400);
+        }
+
+        try {
+            $file = $request->file('image');
+            $fileName = str()->random(40).'.'.$file->getClientOriginalExtension();
+            $path = Storage::disk('s3')->putFileAs('validation', $file, $fileName, 'public');
+            $imageURL = Storage::disk('s3')->url($path);
+        } catch (Exception) {
+            return response()->json(['message' => 'Gagal mengunggah gambar. Coba beberapa saat lagi'], 500);
+        }
+
+        return $this->service->saveSurveyData($validated, $imageURL);
     }
 
     public function store(SurveyRequest $request)
