@@ -14,6 +14,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 
 const formSchema = z.object({
     customerId: z.string({ message: "ID Customer tidak boleh kosong" }).nonempty("ID Customer tidak boleh kosong"),
@@ -277,7 +278,7 @@ export default function Survey({ title, subtitle, questions, channels }: Props) 
                         control={form.control}
                         name={`questions.${question.id}`}
                         render={({ field }) => (
-                            <FormItem className="flex flex-col items-start">
+                            <FormItem className="flex flex-col items-start space-y-4">
                                 <FormLabel>{question.title}</FormLabel>
                                 <FormControl className="w-full">
                                     <Rating
@@ -292,6 +293,7 @@ export default function Survey({ title, subtitle, questions, channels }: Props) 
                                 </FormControl>
                                 <FormDescription>Nilai ({field.value ?? 0}/5)</FormDescription>
                                 <FormMessage>{form.formState.errors.questions?.[question.id]?.message}</FormMessage>
+                                <Separator />
                             </FormItem>
                         )}
                     />
