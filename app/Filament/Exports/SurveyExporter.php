@@ -35,6 +35,9 @@ class SurveyExporter extends Exporter
             ExportColumn::make('channel.name')->label('Channel'),
             ExportColumn::make('driver.nik')->label('NIK Supir'),
             ExportColumn::make('driver.name')->label('Nama Supir'),
+            ExportColumn::make('created_at')->label('Waktu Terbuat')->getStateUsing(function (Survey $survey) {
+                return $survey->created_at->setTimezone('Asia/Jakarta')->format('Y-m-d H:i:s');
+            }),
         ];
 
         foreach ($stats as $stat) {
