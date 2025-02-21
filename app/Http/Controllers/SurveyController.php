@@ -67,7 +67,7 @@ class SurveyController extends Controller
             ]);
 
             $survey = Survey::query()->create([
-                'customer_id' => $customerSurvey->id_customer,
+                'customer_id' => $customerSurvey->id,
                 'driver_id' => $validated['driverId'],
                 'channel_id' => $validated['channelId'],
                 'img_url' => $imageURL,
