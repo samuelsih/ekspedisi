@@ -57,7 +57,7 @@ class DriverResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
-                    ->before(function (Driver $record) {
+                    ->after(function (Driver $record) {
                         $record->survey_answers()->delete();
                         $record->survey()->delete();
                     }),
@@ -65,7 +65,7 @@ class DriverResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make()
-                        ->before(function (Driver $record) {
+                        ->after(function (Driver $record) {
                             $record->survey_answers()->delete();
                             $record->survey()->delete();
                         }),

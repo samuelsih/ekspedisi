@@ -7,16 +7,18 @@ use App\Models\Channel;
 use App\Models\Customer;
 use App\Models\Driver;
 use App\Models\Question;
-use App\Models\Survey;
 use App\Models\WebConfig;
-use Illuminate\Database\QueryException;
+use App\Service\SurveyService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class SurveyController extends Controller
 {
+    public function __construct(
+        private readonly SurveyService $service,
+    ) {}
+
     public function index()
     {
         $questions = Question::query()->where('is_active', true)->get(['id', 'title']);
@@ -42,12 +44,7 @@ class SurveyController extends Controller
     {
         $validated = $request->validated();
 
-        $exists = Survey::query()
-            ->whereDate('created_at', now()->toDateString())
-            ->where('customer_id', $validated['customerId'])
-            ->exists();
-
-        if ($exists) {
+        if ($this->service->surveyExistsToday($validated['customerId'])) {
             return response()->json(['message' => 'Survey untuk toko ini hanya bisa dilakukan 1 kali sehari'], 400);
         }
 
@@ -56,62 +53,11 @@ class SurveyController extends Controller
             $fileName = str()->random(40).'.'.$file->getClientOriginalExtension();
             $path = Storage::disk('s3')->putFileAs('validation', $file, $fileName, 'public');
             $imageURL = Storage::disk('s3')->url($path);
-        } catch (Exception $e) {
+        } catch (Exception) {
             return response()->json(['message' => 'Gagal mengunggah gambar. Coba beberapa saat lagi'], 500);
         }
 
-        try {
-            DB::beginTransaction();
-            $customerSurvey = Customer::query()
-                ->where('id', $validated['customerId'])
-                ->orWhere('id_customer', $validated['customerId'])
-                ->first();
-
-            if(empty($customerSurvey)) {
-                $customerSurvey = Customer::query()->create([
-                    'id_customer' => $validated['customerId'],
-                ]);
-            }
-
-            $survey = Survey::query()->create([
-                'customer_id' => $customerSurvey->id,
-                'driver_id' => $validated['driverId'],
-                'channel_id' => $validated['channelId'],
-                'img_url' => $imageURL,
-            ]);
-
-            $questions = $validated['questions'];
-            $now = now();
-
-            $questions = array_map(
-                fn ($value, $key) => [
-                    'id' => str()->ulid(),
-                    'question_id' => $key,
-                    'value' => $value,
-                    'survey_id' => $survey->id,
-                    'created_at' => $now,
-                ],
-                $questions,
-                array_keys($questions),
-            );
-
-            DB::table('survey_answers')->insert($questions);
-            DB::commit();
-        } catch (QueryException $e) {
-            DB::rollBack();
-            if ($e->getCode() == '23000') {
-                $errorMessage = $e->getMessage();
-                if (str_contains($errorMessage, 'question_id')) {
-                    return response()->json(['message' => 'Terdapat pertanyaan yang tidak diketahui'], 400);
-                }
-            }
-
-            return response()->json(['message' => 'Gagal menyimpan data. Coba beberapa saat lagi'], 500);
-        } catch (Exception $e) {
-            return response()->json(['message' => 'Gagal menyimpan data. Coba beberapa saat lagi'], 500);
-        }
-
-        return response()->json(['message' => 'OK'], 201);
+        return $this->service->saveSurveyData($validated, $imageURL);
     }
 
     public function searchCustomerID(Request $request)

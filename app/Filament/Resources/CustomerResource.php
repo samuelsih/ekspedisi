@@ -59,7 +59,7 @@ class CustomerResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
-                    ->before(function (Customer $record) {
+                    ->after(function (Customer $record) {
                         $record->survey_answers()->delete();
                         $record->surveys()->delete();
                     }),
@@ -67,7 +67,7 @@ class CustomerResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make()
-                        ->before(function (Customer $record) {
+                        ->after(function (Customer $record) {
                             $record->survey_answers()->delete();
                             $record->surveys()->delete();
                         }),
