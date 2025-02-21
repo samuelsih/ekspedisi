@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-const timeToTakePicInMilliSeconds = 20_000;
+const timeToTakePicInMilliSeconds = 30_000;
 const canvasWidth = 640;
 const canvasHeight = 480;
 

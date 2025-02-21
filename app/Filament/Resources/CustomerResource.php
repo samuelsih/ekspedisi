@@ -44,7 +44,8 @@ class CustomerResource extends Resource
     {
         return $table
             ->query(function () {
-                return Customer::query()->select(['id', 'id_customer', 'name', 'created_at', 'deleted_at']);
+                return Customer::query()
+                    ->select(['id', 'id_customer', 'name', 'created_at', 'deleted_at']);
             })
             ->defaultSort('created_at', 'desc')
             ->columns([
@@ -58,14 +59,18 @@ class CustomerResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
-                    ->after(function (Customer $record) {
+                    ->before(function (Customer $record) {
                         $record->survey_answers()->delete();
                         $record->surveys()->delete();
                     }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->before(function (Customer $record) {
+                            $record->survey_answers()->delete();
+                            $record->surveys()->delete();
+                        }),
                 ]),
             ]);
     }

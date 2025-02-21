@@ -109,6 +109,19 @@ export default function Survey({ title, subtitle, questions, channels }: Props) 
     const [isSubmit, setIsSubmit] = useState(false)
 
     const handleSubmit = async (schema: SurveySchema) => {
+        setIsSubmit(true)
+
+        if(!imgBlob) {
+            toast({
+                variant: "destructive",
+                title: "Sedang Mengambil Gambar",
+                description: "Gambar masih diproses. Tunggu beberapa saat lalu kirim kembali",
+            })
+
+            setIsSubmit(false)
+            return
+        }
+
         const formData = new FormData()
         formData.append("customerId", schema.customerId)
         formData.append("channelId", schema.channelId)
@@ -117,12 +130,14 @@ export default function Survey({ title, subtitle, questions, channels }: Props) 
         formData.append("image", imgBlob!, "screenshot.jpg")
 
         try {
-            setIsSubmit(true)
             await axios.postForm("/survey", formData)
             toast({
                 title: "Berhasil",
-                description: "Survey berhasil dikirim"
+                description: "Survey berhasil dikirim",
+                variant: "success",
             })
+
+            form.reset()
         } catch (error) {
             if(axios.isAxiosError(error)) {
                 switch (error.response?.status) {

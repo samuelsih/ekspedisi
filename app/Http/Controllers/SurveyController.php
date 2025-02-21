@@ -62,7 +62,11 @@ class SurveyController extends Controller
 
         try {
             DB::beginTransaction();
-            $customerSurvey = Customer::query()->where('id', $validated['customerId'])->first();
+            $customerSurvey = Customer::query()
+                ->where('id', $validated['customerId'])
+                ->orWhere('id_customer', $validated['customerId'])
+                ->first();
+
             if(empty($customerSurvey)) {
                 $customerSurvey = Customer::query()->create([
                     'id_customer' => $validated['customerId'],
