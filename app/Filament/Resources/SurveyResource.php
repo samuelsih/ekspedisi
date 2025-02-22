@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\SurveyResource\Pages;
 use App\Models\Survey;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
+use Carbon\Carbon;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -50,7 +51,9 @@ class SurveyResource extends Resource implements HasShieldPermissions
                 Tables\Columns\TextColumn::make('channel.name')->label('Channel'),
                 Tables\Columns\TextColumn::make('driver.nik')->label('NIK Supir')->searchable(),
                 Tables\Columns\TextColumn::make('driver.name')->label('Nama Supir')->searchable(),
-                Tables\Columns\TextColumn::make('created_at')->label('Terbuat')->dateTime(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('Terbuat')
+                    ->formatStateUsing(fn (string $state) => Carbon::parse($state)->timezone('Asia/Jakarta')->format('M d Y, H:i:s')),
                 Tables\Columns\ImageColumn::make('img_url')
                     ->label('Validasi Gambar')
                     ->square()
