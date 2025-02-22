@@ -58,6 +58,8 @@
 
    sudo chown -R $USER:www-data database
    sudo chmod -R 775 database
+
+   php artisan migrate
    ```
 
 #### Setup Web Server (Optional).
