@@ -12,19 +12,21 @@ class TopPointCustomer extends ChartWidget
 {
     use InteractsWithPageFilters;
 
-    protected static ?string $heading = 'Top 5 Poin Customer';
+    protected static ?string $heading = 'Top 5 Point Customer';
 
     protected function getData(): array
     {
         $start = $this->filters['startDate'];
         $end = $this->filters['endDate'];
+        $channelId = $this->filters['channelId'];
 
         $customers = Customer::query()
             ->select(['name'])
             ->withCount([
                 'surveys' => fn (QueryBuilder $q) => $q
-                    ->when($start, fn (QueryBuilder $q) => $q->whereDate('surveys.created_at', '>=', $start))
-                    ->when($end, fn (QueryBuilder $q) => $q->whereDate('surveys.created_at', '<=', $end)),
+                    ->when($start, fn (QueryBuilder $q) => $q->whereDate('created_at', '>=', $start))
+                    ->when($end, fn (QueryBuilder $q) => $q->whereDate('created_at', '<=', $end))
+                    ->when($channelId, fn (QueryBuilder $q) => $q->where('channel_id', $channelId)),
             ])
             ->limit(10)
             ->orderByDesc('surveys_count')

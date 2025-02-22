@@ -15,19 +15,21 @@ class TopSurveySubmmitedByCustomerTable extends BaseWidget
 
     protected static ?string $model = Customer::class;
 
-    protected static ?string $heading = 'Top Count Survey Submmited by Customers';
+    protected static ?string $heading = 'Top Count Survey Submitted by Customers';
 
     public function table(Table $table): Table
     {
         $start = $this->filters['startDate'];
         $end = $this->filters['endDate'];
+        $channelId = $this->filters['channelId'];
 
         return $table
             ->query(fn (Customer $customer) => $customer
                 ->select(['id', 'id_customer', 'name'])
                 ->withCount(['surveys' => fn (QueryBuilder $q) => $q
-                    ->when($start, fn (QueryBuilder $q) => $q->whereDate('survey_answers.created_at', '>=', $start))
-                    ->when($end, fn (QueryBuilder $q) => $q->whereDate('survey_answers.created_at', '<=', $end)),
+                    ->when($start, fn (QueryBuilder $q) => $q->whereDate('created_at', '>=', $start))
+                    ->when($end, fn (QueryBuilder $q) => $q->whereDate('created_at', '<=', $end))
+                    ->when($channelId, fn (QueryBuilder $q) => $q->where('channel_id', $channelId)),
                 ])
                 ->orderByDesc('surveys_count')
             )

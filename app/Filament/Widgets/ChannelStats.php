@@ -21,13 +21,15 @@ class ChannelStats extends BaseWidget
     {
         $start = $this->filters['startDate'];
         $end = $this->filters['endDate'];
+        $channelId = $this->filters['channelId'];
 
         $channels = Channel::query()
             ->select(['name'])
+            ->when($channelId, fn (QueryBuilder $q) => $q->where('id', $channelId))
             ->withCount([
                 'surveys' => fn (QueryBuilder $q) => $q
-                    ->when($start, fn (QueryBuilder $q) => $q->whereDate('created_at', '>=', $start))
-                    ->when($end, fn (QueryBuilder $q) => $q->whereDate('created_at', '<=', $end)),
+                    ->when($start, fn (QueryBuilder $q) => $q->whereDate('surveys.created_at', '>=', $start))
+                    ->when($end, fn (QueryBuilder $q) => $q->whereDate('surveys.created_at', '<=', $end)),
             ])
             ->get();
 

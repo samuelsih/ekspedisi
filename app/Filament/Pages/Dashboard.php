@@ -11,8 +11,10 @@ use App\Filament\Widgets\TopDriverTable;
 use App\Filament\Widgets\TopPointCustomer;
 use App\Filament\Widgets\TopSurveySubmmitedByCustomerTable;
 use App\Filament\Widgets\TopWorstDriver;
+use App\Models\Channel;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Pages\Dashboard as BaseDashboard;
 
@@ -53,8 +55,12 @@ class Dashboard extends BaseDashboard
                     ->schema([
                         DatePicker::make('startDate'),
                         DatePicker::make('endDate'),
+                        Select::make('channelId')
+                            ->label('Channel')
+                            ->placeholder('All')
+                            ->options(fn () => Channel::pluck('name', 'id')->toArray()),
                     ])
-                    ->columns(2),
+                    ->columns(3),
             ]);
     }
 }

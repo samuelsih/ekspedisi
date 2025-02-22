@@ -2,7 +2,6 @@
 
 namespace App\Filament\Widgets;
 
-use App\Models\Customer;
 use App\Models\Survey;
 use Filament\Support\RawJs;
 use Filament\Widgets\ChartWidget;
@@ -27,14 +26,18 @@ class BottomAvgCustomerSurveySubmit extends ChartWidget
     {
         $start = $this->filters['startDate'];
         $end = $this->filters['endDate'];
+        $channelId = $this->filters['channelId'];
 
         $surveys = Survey::query()
             ->select(['customer_id'])
+            ->when($start, fn (QueryBuilder $q) => $q->whereDate('created_at', '>=', $start))
+            ->when($end, fn (QueryBuilder $q) => $q->whereDate('created_at', '<=', $end))
+            ->when($channelId, fn (QueryBuilder $q) => $q->where('channel_id', $channelId))
+            ->with('customer:id,name')
             ->withAvg(['survey_answers' => fn (QueryBuilder $q) => $q
                 ->when($start, fn (QueryBuilder $q) => $q->whereDate('survey_answers.created_at', '>=', $start))
                 ->when($end, fn (QueryBuilder $q) => $q->whereDate('survey_answers.created_at', '<=', $end)),
             ], 'value')
-            ->with('customer:id,name')
             ->limit(10)
             ->orderBy('survey_answers_avg_value', 'asc')
             ->get();

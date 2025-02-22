@@ -26,14 +26,19 @@ class TopWorstDriver extends ChartWidget
     {
         $start = $this->filters['startDate'];
         $end = $this->filters['endDate'];
+        $channelId = $this->filters['channelId'];
 
         $drivers = Driver::query()
             ->select(['name'])
+            ->whereHas('surveys', fn (QueryBuilder $q) => $q
+                ->when($start, fn (QueryBuilder $q) => $q->whereDate('created_at', '>=', $start))
+                ->when($end, fn (QueryBuilder $q) => $q->whereDate('created_at', '<=', $end))
+                ->when($channelId, fn (QueryBuilder $q) => $q->where('channel_id', $channelId))
+            )
             ->withAvg(['survey_answers' => fn (QueryBuilder $q) => $q
                 ->when($start, fn (QueryBuilder $q) => $q->whereDate('survey_answers.created_at', '>=', $start))
                 ->when($end, fn (QueryBuilder $q) => $q->whereDate('survey_answers.created_at', '<=', $end)),
             ], 'value')
-            ->whereHas('surveys')
             ->orderBy('survey_answers_avg_value', 'asc')
             ->limit(5)
             ->get();

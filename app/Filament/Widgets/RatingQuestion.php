@@ -31,10 +31,12 @@ class RatingQuestion extends ChartWidget
     {
         $start = $this->filters['startDate'];
         $end = $this->filters['endDate'];
+        $channelId = $this->filters['channelId'];
 
         $questions = Question::query()
             ->select(['title'])
             ->withAvg(['survey_answers' => fn (QueryBuilder $q) => $q
+                ->whereHas('survey', fn (QueryBuilder $q) => empty($channelId) ? $q : $q->where('channel_id', $channelId))
                 ->when($start, fn (QueryBuilder $q) => $q->whereDate('survey_answers.created_at', '>=', $start))
                 ->when($end, fn (QueryBuilder $q) => $q->whereDate('survey_answers.created_at', '<=', $end)),
             ], 'value')

@@ -3,7 +3,6 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Customer;
-use App\Models\Survey;
 use Filament\Support\RawJs;
 use Filament\Widgets\ChartWidget;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
@@ -19,15 +18,21 @@ class BottomPointCustomer extends ChartWidget
     {
         $start = $this->filters['startDate'];
         $end = $this->filters['endDate'];
+        $channelId = $this->filters['channelId'];
 
         $customers = Customer::query()
             ->select(['name'])
+            ->whereHas('surveys', fn (QueryBuilder $q) => $q
+                ->when($start, fn (QueryBuilder $q) => $q->whereDate('created_at', '>=', $start))
+                ->when($end, fn (QueryBuilder $q) => $q->whereDate('created_at', '<=', $end))
+                ->when($channelId, fn (QueryBuilder $q) => $q->where('channel_id', $channelId))
+            )
             ->withCount([
                 'surveys' => fn (QueryBuilder $q) => $q
-                    ->when($start, fn (QueryBuilder $q) => $q->whereDate('surveys.created_at', '>=', $start))
-                    ->when($end, fn (QueryBuilder $q) => $q->whereDate('surveys.created_at', '<=', $end)),
+                    ->when($start, fn (QueryBuilder $q) => $q->whereDate('created_at', '>=', $start))
+                    ->when($end, fn (QueryBuilder $q) => $q->whereDate('created_at', '<=', $end))
+                    ->when($channelId, fn (QueryBuilder $q) => $q->where('channel_id', $channelId)),
             ])
-            ->whereHas('surveys')
             ->limit(10)
             ->orderBy('surveys_count', 'asc')
             ->get();
