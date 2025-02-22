@@ -50,6 +50,7 @@ class SurveyResource extends Resource implements HasShieldPermissions
                 Tables\Columns\TextColumn::make('channel.name')->label('Channel'),
                 Tables\Columns\TextColumn::make('driver.nik')->label('NIK Supir')->searchable(),
                 Tables\Columns\TextColumn::make('driver.name')->label('Nama Supir')->searchable(),
+                Tables\Columns\TextColumn::make('created_at')->label('Terbuat')->dateTime(),
                 Tables\Columns\ImageColumn::make('img_url')
                     ->label('Validasi Gambar')
                     ->square()
