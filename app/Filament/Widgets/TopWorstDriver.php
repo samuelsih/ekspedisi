@@ -33,9 +33,10 @@ class TopWorstDriver extends ChartWidget
                 ->when($start, fn (QueryBuilder $q) => $q->whereDate('survey_answers.created_at', '>=', $start))
                 ->when($end, fn (QueryBuilder $q) => $q->whereDate('survey_answers.created_at', '<=', $end)),
             ], 'value')
+            ->whereHas('surveys')
             ->orderBy('survey_answers_avg_value', 'asc')
             ->limit(5)
-            ->get(['name']);
+            ->get();
 
         return [
             'datasets' => [
@@ -73,6 +74,7 @@ class TopWorstDriver extends ChartWidget
                                 }
 
                                 result[result.length - 1] += ' (' + formatNumber(value) + ')';
+                                return result;
                             }
                         }
                     },

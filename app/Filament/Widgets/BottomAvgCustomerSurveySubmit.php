@@ -3,6 +3,7 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Customer;
+use App\Models\Survey;
 use Filament\Support\RawJs;
 use Filament\Widgets\ChartWidget;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
@@ -27,12 +28,13 @@ class BottomAvgCustomerSurveySubmit extends ChartWidget
         $start = $this->filters['startDate'];
         $end = $this->filters['endDate'];
 
-        $customers = Customer::query()
-            ->select(['name'])
+        $surveys = Survey::query()
+            ->select(['customer_id'])
             ->withAvg(['survey_answers' => fn (QueryBuilder $q) => $q
                 ->when($start, fn (QueryBuilder $q) => $q->whereDate('survey_answers.created_at', '>=', $start))
                 ->when($end, fn (QueryBuilder $q) => $q->whereDate('survey_answers.created_at', '<=', $end)),
             ], 'value')
+            ->with('customer:id,name')
             ->limit(10)
             ->orderBy('survey_answers_avg_value', 'asc')
             ->get();
@@ -41,10 +43,10 @@ class BottomAvgCustomerSurveySubmit extends ChartWidget
             'datasets' => [
                 [
                     'label' => 'Customer',
-                    'data' => $customers->pluck('survey_answers_avg_value')->toArray(),
+                    'data' => $surveys->pluck('survey_answers_avg_value')->toArray(),
                 ],
             ],
-            'labels' => $customers->map(fn ($customer) => "{$customer->name}")->toArray(),
+            'labels' => $surveys->map(fn ($survey) => "{$survey->customer->name}")->toArray(),
         ];
     }
 

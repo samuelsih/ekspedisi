@@ -3,6 +3,7 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Customer;
+use App\Models\Survey;
 use Filament\Support\RawJs;
 use Filament\Widgets\ChartWidget;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
@@ -12,7 +13,7 @@ class BottomPointCustomer extends ChartWidget
 {
     use InteractsWithPageFilters;
 
-    protected static ?string $heading = 'Bottom 5 Poin Customer';
+    protected static ?string $heading = 'Bottom 5 Point Customer';
 
     protected function getData(): array
     {
@@ -26,6 +27,7 @@ class BottomPointCustomer extends ChartWidget
                     ->when($start, fn (QueryBuilder $q) => $q->whereDate('surveys.created_at', '>=', $start))
                     ->when($end, fn (QueryBuilder $q) => $q->whereDate('surveys.created_at', '<=', $end)),
             ])
+            ->whereHas('surveys')
             ->limit(10)
             ->orderBy('surveys_count', 'asc')
             ->get();

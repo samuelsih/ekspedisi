@@ -9,6 +9,7 @@ use App\Filament\Widgets\RatingQuestion;
 use App\Filament\Widgets\TopBestDriver;
 use App\Filament\Widgets\TopDriverTable;
 use App\Filament\Widgets\TopPointCustomer;
+use App\Filament\Widgets\TopSurveySubmmitedByCustomerTable;
 use App\Filament\Widgets\TopWorstDriver;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Section;
@@ -40,6 +41,7 @@ class Dashboard extends BaseDashboard
             TopBestDriver::class,
             TopWorstDriver::class,
             TopDriverTable::class,
+            TopSurveySubmmitedByCustomerTable::class,
         ];
     }
 
