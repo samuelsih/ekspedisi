@@ -47,14 +47,6 @@ class UserResource extends Resource implements HasShieldPermissions
                         return true;
                     })
                     ->revealable(),
-                Forms\Components\TextInput::make('password_confirmation')
-                    ->password()
-                    ->maxLength(255)
-                    ->hidden(fn (string $operation) => $operation === 'edit')
-                    ->dehydrated(false)
-                    ->same('password')
-                    ->label('Confirm Password')
-                    ->revealable(),
                 Forms\Components\CheckboxList::make('roles')
                     ->relationship('roles', 'name')
                     ->columns(3)
