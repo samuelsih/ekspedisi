@@ -50,8 +50,8 @@ class UserResource extends Resource implements HasShieldPermissions
                 Forms\Components\TextInput::make('password_confirmation')
                     ->password()
                     ->maxLength(255)
-                    ->required(fn (string $operation) => $operation === 'create')
                     ->hidden(fn (string $operation) => $operation === 'edit')
+                    ->dehydrated(false)
                     ->same('password')
                     ->label('Confirm Password')
                     ->revealable(),
