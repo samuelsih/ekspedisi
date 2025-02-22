@@ -65,7 +65,7 @@ class SurveyController extends Controller
         $validated = $request->validated();
 
         $channel = Channel::query()->where('name', 'GT')->first();
-        if(empty($channel)) {
+        if (empty($channel)) {
             return response()->json(['message' => 'Gagal mengambil data. Coba beberapa saat lagi'], 500);
         }
 

@@ -4,13 +4,14 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\WebConfigResource\Pages;
 use App\Models\WebConfig;
+use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 
-class WebConfigResource extends Resource
+class WebConfigResource extends Resource implements HasShieldPermissions
 {
     protected static ?string $model = WebConfig::class;
 
@@ -64,5 +65,17 @@ class WebConfigResource extends Resource
     public static function canCreate(): bool
     {
         return false;
+    }
+
+    public static function getPermissionPrefixes(): array
+    {
+        return [
+            'view',
+            'view_any',
+            'create',
+            'update',
+            'delete',
+            'delete_any',
+        ];
     }
 }

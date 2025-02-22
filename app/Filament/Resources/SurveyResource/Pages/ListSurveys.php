@@ -16,7 +16,8 @@ class ListSurveys extends ListRecords
         return [
             ExportAction::make()
                 ->exporter(SurveyExporter::class)
-                ->color('primary'),
+                ->color('primary')
+                ->visible(auth()->user()->can('export_survey')),
         ];
     }
 }

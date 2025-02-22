@@ -4,13 +4,14 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\QuestionResource\Pages;
 use App\Models\Question;
+use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 
-class QuestionResource extends Resource
+class QuestionResource extends Resource implements HasShieldPermissions
 {
     protected static ?string $model = Question::class;
 
@@ -75,6 +76,18 @@ class QuestionResource extends Resource
             'index' => Pages\ListQuestions::route('/'),
             'create' => Pages\CreateQuestion::route('/create'),
             'edit' => Pages\EditQuestion::route('/{record}/edit'),
+        ];
+    }
+
+    public static function getPermissionPrefixes(): array
+    {
+        return [
+            'view',
+            'view_any',
+            'create',
+            'update',
+            'delete',
+            'delete_any',
         ];
     }
 }

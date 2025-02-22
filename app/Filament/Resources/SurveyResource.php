@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\SurveyResource\Pages;
 use App\Models\Survey;
+use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -12,7 +13,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\HtmlString;
 
-class SurveyResource extends Resource
+class SurveyResource extends Resource implements HasShieldPermissions
 {
     protected static ?string $model = Survey::class;
 
@@ -141,5 +142,18 @@ class SurveyResource extends Resource
     public static function canView(Model $record): bool
     {
         return false;
+    }
+
+    public static function getPermissionPrefixes(): array
+    {
+        return [
+            'view',
+            'view_any',
+            'create',
+            'update',
+            'delete',
+            'export',
+            'delete_any',
+        ];
     }
 }
