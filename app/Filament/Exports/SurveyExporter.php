@@ -4,6 +4,7 @@ namespace App\Filament\Exports;
 
 use App\Models\Question;
 use App\Models\Survey;
+use App\Models\SurveyAnswer;
 use Carbon\CarbonInterface;
 use Filament\Actions\Exports\ExportColumn;
 use Filament\Actions\Exports\Exporter;
@@ -43,6 +44,12 @@ class SurveyExporter extends Exporter
         foreach ($stats as $stat) {
             $starters[] = $stat;
         }
+
+        $starters[] = ExportColumn::make("avg_survey_answers")
+            ->getStateUsing(function (Survey $survey) {
+                return SurveyAnswer::query()->where('survey_id', $survey->id)->avg('value');
+            })
+            ->label('Rata-Rata Rating');
 
         return $starters;
     }

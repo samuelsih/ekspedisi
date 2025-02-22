@@ -91,6 +91,8 @@ class SurveyResource extends Resource implements HasShieldPermissions
                             </tr>
                         ")->implode('');
 
+                        $avg = $record->survey_answers->avg('value');
+
                         return new HtmlString("
                             <table>
                                 <thead>
@@ -103,6 +105,8 @@ class SurveyResource extends Resource implements HasShieldPermissions
                                     {$rows}
                                 </tbody>
                             </table>
+
+                            <p>Average: {$avg}</p>
                         ");
                     }),
             ])
