@@ -45,7 +45,7 @@ class SurveyExporter extends Exporter
             $starters[] = $stat;
         }
 
-        $starters[] = ExportColumn::make("avg_survey_answers")
+        $starters[] = ExportColumn::make('avg_survey_answers')
             ->getStateUsing(function (Survey $survey) {
                 return SurveyAnswer::query()->where('survey_id', $survey->id)->avg('value');
             })

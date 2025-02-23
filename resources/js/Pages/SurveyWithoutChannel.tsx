@@ -12,13 +12,13 @@ import CameraScreenshot from "@/components/CameraScreenshot";
 import { Toaster } from "@/components/ui/toaster"
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 
 const formSchema = z.object({
     customerId: z.string({ message: "ID Customer tidak boleh kosong" }).nonempty("ID Customer tidak boleh kosong"),
-    driverId: z.string({ message: "NIK Driver tidak boleh kosong" }).nonempty("NIK Driver tidak boleh kosong"),
+    driverId: z.string({ message: "NIK Supir tidak boleh kosong" }).nonempty("NIK Supir tidak boleh kosong"),
     questions: z.record(
         z.number()
             .int("Rating harus bilangan bulat")
@@ -210,6 +210,9 @@ export default function Survey({ title, subtitle, questions }: Props) {
                                 <SheetHeader className="p-4">
                                     <SheetTitle>Masukkan Data Baru</SheetTitle>
                                 </SheetHeader>
+                                <SheetDescription>
+                                    Pastikan sudah melakukan pencarian ID Customer terlebih dahulu sebelum memutuskan untuk mengisi ini.
+                                </SheetDescription>
                                 <div className="p-4 flex-1">
                                     <Input
                                         placeholder="Masukkan ID Customer"

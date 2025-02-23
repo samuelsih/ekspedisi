@@ -1,67 +1,26 @@
-import { Head } from "@inertiajs/react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from "zod";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import axios from "axios";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Rating } from "@/components/ui/rating";
 import Selector from "@/components/SelectSearch";
-import CameraScreenshot from "@/components/CameraScreenshot";
-import { Toaster } from "@/components/ui/toaster"
-import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import { Form, FormField, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
+import { Label } from "@/components/ui/label";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Textarea } from "@/components/ui/textarea";
+import { Toaster } from "@/components/ui/toaster";
+import { useToast } from "@/hooks/use-toast";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Head } from "@inertiajs/react";
+import axios from "axios";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 const formSchema = z.object({
     customerId: z.string({ message: "ID Customer tidak boleh kosong" }).nonempty("ID Customer tidak boleh kosong"),
-    channelId: z.string({ message: "Channel tidak boleh kosong" }).nonempty("Channel tidak boleh kosong"),
     driverId: z.string({ message: "NIK Supir tidak boleh kosong" }).nonempty("NIK Supir tidak boleh kosong"),
-    questions: z.record(
-        z.number()
-            .int("Rating harus bilangan bulat")
-            .min(1, "Minimal rating adalah 1")
-            .max(5, "Maksimal rating adalah 5")
-    ).superRefine((data, ctx) => {
-        Object.entries(data).forEach(([key, value]) => {
-            if (!Number.isInteger(value)) {
-                ctx.addIssue({
-                    code: "custom",
-                    message: `Rating harus bilangan bulat`,
-                    path: ["questions", key],
-                });
-            } else if (value < 1 || value > 5) {
-                ctx.addIssue({
-                    code: "custom",
-                    message: `Rating harus antara 1-5`,
-                    path: ["questions", key],
-                });
-            }
-        });
-    }),
+    reason: z.string({ message: "Alasan tidak boleh kosong" }).nonempty("Alasan tidak boleh kosong"),
 });
 
-type SurveySchema = z.infer<typeof formSchema>
-
-interface Question {
-    id: string;
-    title: string;
-}
-
-interface Channel {
-    id: string;
-    name: string;
-}
-
-interface Props {
-    title: string;
-    subtitle: string;
-    questions: Question[];
-    channels: Channel[];
-}
+type AntiSurveySchema = z.infer<typeof formSchema>
 
 interface CustomerID {
     id: string;
@@ -75,24 +34,15 @@ interface Driver {
     name: string;
 }
 
-export default function Survey({ title, subtitle, questions, channels }: Props) {
-    const { toast } = useToast()
-    const onPermissionDenied = () => {
-        toast({
-            variant: "destructive",
-            title: "Gagal Mengambil Gambar",
-            description: "Berikan izin kamera pada browser lalu refresh browser kembali.",
-        })
-    }
+interface Props {
+    title: string;
+    subtitle: string;
+}
 
-    const form = useForm<SurveySchema>({
+export default function AntiSurvey({ title, subtitle }: Props) {
+    const { toast } = useToast()
+    const form = useForm<AntiSurveySchema>({
         resolver: zodResolver(formSchema),
-        defaultValues: {
-            questions: questions.reduce<Record<string, number>>((acc, item) => {
-                acc[item.id] = 0;
-                return acc;
-            }, {})
-        },
     })
 
     const fetchDrivers = async (searchTerm: string) => {
@@ -105,35 +55,23 @@ export default function Survey({ title, subtitle, questions, channels }: Props) 
         return result.data
     }
 
-    const [imgBlob, setImgBlob] = useState<Blob | null>(null)
     const [isSubmit, setIsSubmit] = useState(false)
+    const [isSheetOpen, setIsSheetOpen] = useState(false)
+    const [customCustomerId, setCustomCustomerId] = useState("")
 
-    const handleSubmit = async (schema: SurveySchema) => {
+    const handleSubmit = async (schema: AntiSurveySchema) => {
         setIsSubmit(true)
-
-        if(!imgBlob) {
-            toast({
-                variant: "destructive",
-                title: "Sedang Mengambil Gambar",
-                description: "Gambar masih diproses. Tunggu beberapa saat lalu kirim kembali",
-            })
-
-            setIsSubmit(false)
-            return
-        }
 
         const formData = new FormData()
         formData.append("customerId", schema.customerId)
-        formData.append("channelId", schema.channelId)
         formData.append("driverId", schema.driverId)
-        formData.append("questions", JSON.stringify(schema.questions))
-        formData.append("image", imgBlob!, "screenshot.jpg")
+        formData.append("reason", schema.reason)
 
         try {
-            await axios.postForm("/survey", formData)
+            await axios.postForm("/decline-survey", formData)
             toast({
                 title: "Berhasil",
-                description: "Survey berhasil dikirim",
+                description: "Data berhasil dikirim",
                 variant: "success",
             })
 
@@ -166,14 +104,10 @@ export default function Survey({ title, subtitle, questions, channels }: Props) 
         }
     }
 
-    const [isSheetOpen, setIsSheetOpen] = useState(false)
-    const [customCustomerId, setCustomCustomerId] = useState("")
-
     return (
         <div className="container mx-auto p-8">
             <Head title="Survey" />
             <Toaster />
-            <CameraScreenshot onPermissionDenied={onPermissionDenied} onCaptureSuccess={b => setImgBlob(b)}/>
             <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl text-center">
                 {title}
             </h1>
@@ -218,6 +152,9 @@ export default function Survey({ title, subtitle, questions, channels }: Props) 
                                 <SheetHeader className="p-4">
                                     <SheetTitle>Masukkan Data Baru</SheetTitle>
                                 </SheetHeader>
+                                <SheetDescription>
+                                    Pastikan sudah melakukan pencarian ID Customer terlebih dahulu sebelum memutuskan untuk mengisi ini.
+                                </SheetDescription>
                                 <div className="p-4 flex-1">
                                     <Input
                                         placeholder="Masukkan ID Customer"
@@ -237,29 +174,6 @@ export default function Survey({ title, subtitle, questions, channels }: Props) 
                         </>
                     )}
                 />
-                <FormField
-                    control={form.control}
-                    name="channelId"
-                    render={({ field }) => (
-                        <FormItem>
-                        <FormLabel>Channel</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                            <SelectTrigger>
-                                <SelectValue placeholder="Pilih Channel" />
-                            </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                                {channels.map((channel) => (
-                                    <SelectItem key={channel.id} value={channel.id}>{channel.name}</SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                        <FormMessage />
-                        </FormItem>
-                    )}
-                />
-
                 <FormField
                     control={form.control}
                     name="driverId"
@@ -286,35 +200,19 @@ export default function Survey({ title, subtitle, questions, channels }: Props) 
                         />
                     )}
                 />
+                <FormField
+                    control={form.control}
+                    name="reason"
+                    render={({ field }) => (
+                        <div>
+                            <Label htmlFor="reason">Alasan</Label>
+                            <Textarea className="mt-2" id="reason" {...field}/>
+                            <FormMessage>{form.formState.errors.reason?.message}</FormMessage>
+                        </div>
+                    )}
+                />
 
-                {questions.map(question => (
-                    <FormField
-                        key={question.id}
-                        control={form.control}
-                        name={`questions.${question.id}`}
-                        render={({ field }) => (
-                            <FormItem className="flex flex-col items-start space-y-4">
-                                <FormLabel>{question.title}</FormLabel>
-                                <FormControl className="w-full">
-                                    <Rating
-                                        size="lg"
-                                        value={field.value ?? 0}
-                                        onChange={(value) => {
-                                            form.setValue(`questions.${question.id}`, value, {
-                                                shouldValidate: true,
-                                            });
-                                        }}
-                                    />
-                                </FormControl>
-                                <FormDescription>Nilai ({field.value ?? 0}/5)</FormDescription>
-                                <FormMessage>{form.formState.errors.questions?.[question.id]?.message}</FormMessage>
-                                <Separator />
-                            </FormItem>
-                        )}
-                    />
-                ))}
-
-                <Button type="submit" className="w-full" disabled={isSubmit}>Kirim</Button>
+                <Button type="submit" variant="destructive" className="w-full" disabled={isSubmit}>Kirim</Button>
                 </form>
             </Form>
         </div>
