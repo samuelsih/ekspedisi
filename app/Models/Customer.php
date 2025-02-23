@@ -19,4 +19,9 @@ class Customer extends Model
     {
         return $this->hasManyThrough(SurveyAnswer::class, Survey::class);
     }
+
+    public function customer_survey_declines()
+    {
+        return $this->hasMany(CustomerSurveyDecline::class);
+    }
 }

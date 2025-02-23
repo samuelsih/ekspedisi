@@ -52,6 +52,15 @@ class CustomerSurveyDeclineResource extends Resource
                 SelectFilter::make('channel_id')
                     ->relationship('channel', 'name')
                     ->label('Channel'),
+            ])
+            ->actions([
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
             ]);
     }
 
@@ -79,8 +88,13 @@ class CustomerSurveyDeclineResource extends Resource
         return false;
     }
 
-    public static function canDelete(Model $record): bool
+    public static function getPermissionPrefixes(): array
     {
-        return false;
+        return [
+            'view',
+            'view_any',
+            'delete',
+            'delete_any'
+        ];
     }
 }

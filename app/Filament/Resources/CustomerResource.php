@@ -61,6 +61,7 @@ class CustomerResource extends Resource implements HasShieldPermissions
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
                     ->after(function (Customer $record) {
+                        $record->customer_survey_declines()->delete();
                         $record->survey_answers()->delete();
                         $record->surveys()->delete();
                     }),
@@ -69,6 +70,7 @@ class CustomerResource extends Resource implements HasShieldPermissions
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make()
                         ->after(function (Customer $record) {
+                            $record->customer_survey_declines()->delete();
                             $record->survey_answers()->delete();
                             $record->surveys()->delete();
                         }),
