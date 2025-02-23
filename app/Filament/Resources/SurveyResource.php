@@ -47,10 +47,16 @@ class SurveyResource extends Resource implements HasShieldPermissions
             ->columns([
                 Tables\Columns\TextColumn::make('index')->label('No.')->rowIndex(),
                 Tables\Columns\TextColumn::make('customer.id_customer')->label('ID Customer')->searchable(),
-                Tables\Columns\TextColumn::make('customer.name')->label('Nama Customer')->searchable(),
+                Tables\Columns\TextColumn::make('customer.name')
+                    ->wrap()
+                    ->default('-')
+                    ->label('Nama Customer')->searchable(),
                 Tables\Columns\TextColumn::make('channel.name')->label('Channel'),
                 Tables\Columns\TextColumn::make('driver.nik')->label('NIK Supir')->searchable(),
-                Tables\Columns\TextColumn::make('driver.name')->label('Nama Supir')->searchable(),
+                Tables\Columns\TextColumn::make('driver.name')
+                    ->wrap()
+                    ->label('Nama Supir')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Terbuat')
                     ->formatStateUsing(fn (string $state) => Carbon::parse($state)->timezone('Asia/Jakarta')->format('M d Y, H:i:s')),

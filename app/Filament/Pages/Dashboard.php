@@ -7,6 +7,7 @@ use App\Filament\Widgets\BottomPointCustomer;
 use App\Filament\Widgets\ChannelStats;
 use App\Filament\Widgets\RatingQuestion;
 use App\Filament\Widgets\TopBestDriver;
+use App\Filament\Widgets\TopContributionDriverTable;
 use App\Filament\Widgets\TopDriverTable;
 use App\Filament\Widgets\TopPointCustomer;
 use App\Filament\Widgets\TopSurveySubmmitedByCustomerTable;
@@ -35,15 +36,16 @@ class Dashboard extends BaseDashboard
     public function getWidgets(): array
     {
         return [
-            ChannelStats::class,
-            TopPointCustomer::class,
-            BottomPointCustomer::class,
-            BottomAvgCustomerSurveySubmit::class,
-            RatingQuestion::class,
-            TopBestDriver::class,
-            TopWorstDriver::class,
-            TopDriverTable::class,
-            TopSurveySubmmitedByCustomerTable::class,
+            // ChannelStats::class,
+            // TopPointCustomer::class,
+            // BottomPointCustomer::class,
+            // BottomAvgCustomerSurveySubmit::class,
+            // RatingQuestion::class,
+            // TopBestDriver::class,
+            // TopWorstDriver::class,
+            // TopDriverTable::class,
+            // TopSurveySubmmitedByCustomerTable::class,
+            TopContributionDriverTable::class,
         ];
     }
 

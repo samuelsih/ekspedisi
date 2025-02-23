@@ -24,4 +24,17 @@ class Driver extends Model
     {
         return $this->hasMany(CustomerSurveyDecline::class);
     }
+
+    public function getContributionAttribute()
+    {
+        $totalSurvey = $this->surveys_count;
+        $divider = $totalSurvey + $this->customer_survey_declines_count;
+        $avgRating = $this->survey_answers_avg_value;
+
+        if ($divider === 0) {
+            return 0;
+        }
+
+        return round(($totalSurvey / $divider) * $avgRating, 3);
+    }
 }

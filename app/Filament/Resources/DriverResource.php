@@ -44,13 +44,26 @@ class DriverResource extends Resource implements HasShieldPermissions
     {
         return $table
             ->query(function () {
-                return Driver::query()->select(['id', 'nik', 'name', 'created_at', 'deleted_at']);
+                return Driver::query()
+                    ->select(['id', 'nik', 'name', 'created_at', 'deleted_at'])
+                    ->withAvg('survey_answers', 'value')
+                    ->withCount('surveys')
+                    ->withCount('customer_survey_declines');
             })
             ->defaultSort('created_at', 'desc')
             ->columns([
                 Tables\Columns\TextColumn::make('index')->label('No.')->rowIndex(),
                 Tables\Columns\TextColumn::make('nik')->label('NIK')->searchable(),
-                Tables\Columns\TextColumn::make('name')->searchable(),
+                Tables\Columns\TextColumn::make('name')->wrap()->searchable(),
+                Tables\Columns\TextColumn::make('surveys_count')->label('Survey Submitted'),
+                Tables\Columns\TextColumn::make('customer_survey_declines_count')->label('Survey Declined'),
+                Tables\Columns\TextColumn::make('survey_answers_avg_value')
+                    ->default(0)
+                    ->numeric(decimalPlaces: 3)
+                    ->label('Avg Rating'),
+                Tables\Columns\TextColumn::make('contribution')
+                    ->getStateUsing(fn (Driver $record) => $record->contribution)
+                    ->label('Contribution'),
             ])
             ->filters([
                 //
