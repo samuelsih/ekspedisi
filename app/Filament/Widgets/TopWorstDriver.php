@@ -59,6 +59,15 @@ class TopWorstDriver extends ChartWidget
     {
         return RawJs::make(<<<'JS'
             {
+                scales: {
+                    x: {
+                        display: false
+                    },
+                    y: {
+                        display: false
+                    }
+                },
+                
                 plugins: {
                     tooltip: {
                         callbacks: {

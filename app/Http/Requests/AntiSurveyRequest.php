@@ -51,11 +51,11 @@ class AntiSurveyRequest extends FormRequest
             'driverId.required' => 'NIK Driver tidak boleh kosong',
             'driverId.exists' => 'NIK Driver tidak diketahui',
 
-            'questions.required' => 'Pertanyaan wajib diisi',
-            'questions.array' => 'Bentuk pertanyaan tidak valid',
+            'channelId.required' => 'Channel tidak boleh kosong',
+            'channelId.exists' => 'Channel tidak diketahui',
 
-            'image.required' => 'Tidak ada tangkapan layar',
-            'image.image' => 'Harus berupa gambar',
+            'reason.required' => 'Alasan tidak boleh kosong',
+            'reason.max' => 'Panjang alasan maksimal 100 karakter',
         ];
     }
 }
