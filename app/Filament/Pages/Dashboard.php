@@ -36,15 +36,15 @@ class Dashboard extends BaseDashboard
     public function getWidgets(): array
     {
         return [
-            // ChannelStats::class,
-            // TopPointCustomer::class,
-            // BottomPointCustomer::class,
-            // BottomAvgCustomerSurveySubmit::class,
-            // RatingQuestion::class,
-            // TopBestDriver::class,
-            // TopWorstDriver::class,
-            // TopDriverTable::class,
-            // TopSurveySubmmitedByCustomerTable::class,
+            ChannelStats::class,
+            TopPointCustomer::class,
+            BottomPointCustomer::class,
+            BottomAvgCustomerSurveySubmit::class,
+            RatingQuestion::class,
+            TopBestDriver::class,
+            TopWorstDriver::class,
+            TopDriverTable::class,
+            TopSurveySubmmitedByCustomerTable::class,
             TopContributionDriverTable::class,
         ];
     }
