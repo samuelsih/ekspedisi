@@ -5,13 +5,15 @@ namespace App\Filament\Pages;
 use App\Filament\Widgets\BottomAvgCustomerSurveySubmit;
 use App\Filament\Widgets\BottomPointCustomer;
 use App\Filament\Widgets\ChannelStats;
+use App\Filament\Widgets\Placeholder;
 use App\Filament\Widgets\RatingQuestion;
 use App\Filament\Widgets\TopBestDriver;
-use App\Filament\Widgets\TopContributionDriverTable;
+use App\Filament\Widgets\TopContributionDriver;
 use App\Filament\Widgets\TopDriverTable;
 use App\Filament\Widgets\TopPointCustomer;
 use App\Filament\Widgets\TopSurveySubmmitedByCustomerTable;
 use App\Filament\Widgets\TopWorstDriver;
+use App\Filament\Widgets\WorstContributionDriver;
 use App\Models\Channel;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Section;
@@ -37,15 +39,21 @@ class Dashboard extends BaseDashboard
     {
         return [
             ChannelStats::class,
+
             TopPointCustomer::class,
             BottomPointCustomer::class,
             BottomAvgCustomerSurveySubmit::class,
+
             RatingQuestion::class,
             TopBestDriver::class,
             TopWorstDriver::class,
+
+            TopContributionDriver::class,
+            WorstContributionDriver::class,
+            Placeholder::class,
+
             TopDriverTable::class,
             TopSurveySubmmitedByCustomerTable::class,
-            TopContributionDriverTable::class,
         ];
     }
 
