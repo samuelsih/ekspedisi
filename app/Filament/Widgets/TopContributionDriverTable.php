@@ -24,7 +24,7 @@ class TopContributionDriverTable extends BaseWidget
         $channelId = $this->filters['channelId'];
 
         return $table
-            ->query(fn(Driver $driver) => $driver->query()
+            ->query(fn (Driver $driver) => $driver->query()
                 ->select(['id', 'nik', 'name'])
                 ->whereHas('surveys', fn (QueryBuilder $q) => $q
                     ->when($start, fn (QueryBuilder $q) => $q->whereDate('created_at', '>=', $start))
