@@ -11,7 +11,7 @@ class TopContributionDriver extends ChartWidget
 {
     use InteractsWithPageFilters;
 
-    protected static ?string $heading = 'Top 10 Contribution Driver';
+    protected static ?string $heading = 'Top Rating by Contribution';
 
     protected function getData(): array
     {

@@ -11,7 +11,7 @@ class WorstContributionDriver extends ChartWidget
 {
     use InteractsWithPageFilters;
 
-    protected static ?string $heading = 'Bottom 10 Contribution Driver';
+    protected static ?string $heading = 'Worst Rating by Contribution';
 
     protected function getData(): array
     {

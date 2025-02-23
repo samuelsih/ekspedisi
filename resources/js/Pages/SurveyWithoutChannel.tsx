@@ -5,7 +5,6 @@ import { z } from "zod";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Rating } from "@/components/ui/rating";
 import Selector from "@/components/SelectSearch";
 import CameraScreenshot from "@/components/CameraScreenshot";
@@ -54,6 +53,7 @@ interface Props {
     title: string;
     subtitle: string;
     questions: Question[];
+    showLinkToSurveyDecline: boolean;
 }
 
 interface CustomerID {
@@ -68,7 +68,7 @@ interface Driver {
     name: string;
 }
 
-export default function Survey({ title, subtitle, questions }: Props) {
+export default function Survey({ title, subtitle, questions, showLinkToSurveyDecline }: Props) {
     const { toast } = useToast()
     const onPermissionDenied = () => {
         toast({
@@ -285,8 +285,15 @@ export default function Survey({ title, subtitle, questions }: Props) {
                         )}
                     />
                 ))}
-
-                <Button type="submit" className="w-full" disabled={isSubmit}>Kirim</Button>
+                <Button type="submit" className="w-full mb-4" disabled={isSubmit}>Kirim</Button>
+                {
+                    showLinkToSurveyDecline &&
+                    <div className="space-y-2 text-center">
+                        <a href="/decline-survey" target="_blank" rel="noopener noreferrer" className="underline text-blue-500">
+                            Menu Supir
+                        </a>
+                    </div>
+                }
                 </form>
             </Form>
         </div>

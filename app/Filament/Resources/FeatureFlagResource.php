@@ -29,10 +29,11 @@ class FeatureFlagResource extends Resource implements HasShieldPermissions
             ])
             ->actions([
                 Tables\Actions\Action::make('is_active')
-                    ->hidden(auth()->user()->can('update_features'))
+                    ->button()
+                    ->visible(auth()->user()->can('update_feature::flag'))
                     ->requiresConfirmation()
                     ->icon(fn (Feature $record) => $record->is_active ? 'heroicon-o-exclamation-triangle' : 'heroicon-o-check')
-                    ->label(fn (Feature $record) => $record->is_active ? 'Deactivate' : 'Activate')
+                    ->label(fn (Feature $record) => $record->is_active ? 'Deactivate Feature' : 'Activate Feature')
                     ->color(fn (Feature $record) => $record->is_active ? 'danger' : 'success')
                     ->action(function (Feature $record) {
                         $active = $record->is_active;

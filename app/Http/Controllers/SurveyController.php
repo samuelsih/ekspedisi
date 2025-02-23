@@ -7,6 +7,7 @@ use App\Http\Requests\SurveyWithoutChannelRequest;
 use App\Models\Channel;
 use App\Models\Customer;
 use App\Models\Driver;
+use App\Models\Feature;
 use App\Models\Question;
 use App\Models\WebConfig;
 use App\Service\SurveyService;
@@ -53,10 +54,13 @@ class SurveyController extends Controller
             ->where('name', 'Sub judul halaman survey')
             ->first('value')['value'];
 
+        $linkSurveyDeclinedEnabled = Feature::active("customer-survey-decline");
+
         return Inertia::render('SurveyWithoutChannel', [
             'title' => $title,
             'subtitle' => $subtitle,
             'questions' => $questions,
+            'showLinkToSurveyDecline' => $linkSurveyDeclinedEnabled,
         ]);
     }
 
