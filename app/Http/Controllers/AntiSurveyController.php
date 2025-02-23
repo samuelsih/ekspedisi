@@ -5,12 +5,19 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AntiSurveyRequest;
 use App\Models\Customer;
 use App\Models\CustomerSurveyDecline;
+use App\Models\Feature;
 use App\Models\WebConfig;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class AntiSurveyController extends Controller
 {
+    public function __construct()
+    {
+        throw_unless(Feature::active("customer-survey-decline"), NotFoundHttpException::class);
+    }
+
     public function index()
     {
         $title = WebConfig::query()
