@@ -31,7 +31,7 @@ class CustomerSurveyDeclinePolicy
      */
     public function create(User $user): bool
     {
-        return $user->can('create_customer::survey::decline');
+        return $user->can('{{ Create }}');
     }
 
     /**
@@ -39,7 +39,7 @@ class CustomerSurveyDeclinePolicy
      */
     public function update(User $user, CustomerSurveyDecline $customerSurveyDecline): bool
     {
-        return $user->can('update_customer::survey::decline');
+        return $user->can('{{ Update }}');
     }
 
     /**
@@ -63,7 +63,7 @@ class CustomerSurveyDeclinePolicy
      */
     public function forceDelete(User $user, CustomerSurveyDecline $customerSurveyDecline): bool
     {
-        return $user->can('force_delete_customer::survey::decline');
+        return $user->can('{{ ForceDelete }}');
     }
 
     /**
@@ -71,7 +71,7 @@ class CustomerSurveyDeclinePolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('force_delete_any_customer::survey::decline');
+        return $user->can('{{ ForceDeleteAny }}');
     }
 
     /**
@@ -79,7 +79,7 @@ class CustomerSurveyDeclinePolicy
      */
     public function restore(User $user, CustomerSurveyDecline $customerSurveyDecline): bool
     {
-        return $user->can('restore_customer::survey::decline');
+        return $user->can('{{ Restore }}');
     }
 
     /**
@@ -87,7 +87,7 @@ class CustomerSurveyDeclinePolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->can('restore_any_customer::survey::decline');
+        return $user->can('{{ RestoreAny }}');
     }
 
     /**
@@ -95,7 +95,7 @@ class CustomerSurveyDeclinePolicy
      */
     public function replicate(User $user, CustomerSurveyDecline $customerSurveyDecline): bool
     {
-        return $user->can('replicate_customer::survey::decline');
+        return $user->can('{{ Replicate }}');
     }
 
     /**
@@ -103,6 +103,6 @@ class CustomerSurveyDeclinePolicy
      */
     public function reorder(User $user): bool
     {
-        return $user->can('reorder_customer::survey::decline');
+        return $user->can('{{ Reorder }}');
     }
 }

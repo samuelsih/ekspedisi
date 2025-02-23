@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\CustomerSurveyDeclineResource\Pages;
 use App\Models\CustomerSurveyDecline;
+use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Carbon\Carbon;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -12,7 +13,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 
-class CustomerSurveyDeclineResource extends Resource
+class CustomerSurveyDeclineResource extends Resource implements HasShieldPermissions
 {
     protected static ?string $model = CustomerSurveyDecline::class;
 
