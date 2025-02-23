@@ -66,10 +66,15 @@ class DriverResource extends Resource implements HasShieldPermissions
                     ->numeric(decimalPlaces: 3)
                     ->label('Avg Rating')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('contribution')
-                    ->getStateUsing(fn (Driver $record) => $record->contribution)
-                    ->label('Contribution')
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('driver_contribution')
+                    ->getStateUsing(function (Driver $record) {
+                        return round(
+                            ($record->surveys_count / max($record->surveys_count + $record->customer_survey_declines_count, 1))
+                            * ($record->survey_answers_avg_value ?? 0),
+                            3
+                        );
+                    })
+                    ->label('Contribution'),
             ])
             ->filters([
                 //
