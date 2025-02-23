@@ -100,6 +100,7 @@ export default function Survey({ title, subtitle, questions, showLinkToSurveyDec
 
     const [imgBlob, setImgBlob] = useState<Blob | null>(null)
     const [isSubmit, setIsSubmit] = useState(false)
+    const [cameraKey, setCameraKey] = useState(0)
 
     const handleSubmit = async (schema: SurveySchema) => {
         setIsSubmit(true)
@@ -155,6 +156,7 @@ export default function Survey({ title, subtitle, questions, showLinkToSurveyDec
             }
         } finally {
             setIsSubmit(false)
+            setCameraKey((prev) => prev + 1)
         }
     }
 
@@ -165,7 +167,7 @@ export default function Survey({ title, subtitle, questions, showLinkToSurveyDec
         <div className="container mx-auto p-8">
             <Head title="Survey" />
             <Toaster />
-            <CameraScreenshot onPermissionDenied={onPermissionDenied} onCaptureSuccess={b => setImgBlob(b)}/>
+            <CameraScreenshot key={cameraKey} onPermissionDenied={onPermissionDenied} onCaptureSuccess={b => setImgBlob(b)}/>
             <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl text-center">
                 {title}
             </h1>
