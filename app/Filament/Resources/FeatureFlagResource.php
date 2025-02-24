@@ -37,8 +37,9 @@ class FeatureFlagResource extends Resource implements HasShieldPermissions
                     ->color(fn (Feature $record) => $record->is_active ? 'danger' : 'success')
                     ->action(function (Feature $record) {
                         $active = $record->is_active;
+
                         return $record->update(['is_active' => $active ? false : true]);
-                    })
+                    }),
             ]);
     }
 

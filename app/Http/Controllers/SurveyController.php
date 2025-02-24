@@ -54,7 +54,7 @@ class SurveyController extends Controller
             ->where('name', 'Sub judul halaman survey')
             ->first('value')['value'];
 
-        $linkSurveyDeclinedEnabled = Feature::active("customer-survey-decline");
+        $linkSurveyDeclinedEnabled = Feature::active('customer-survey-decline');
 
         return Inertia::render('SurveyWithoutChannel', [
             'title' => $title,

@@ -15,7 +15,7 @@ class AntiSurveyController extends Controller
 {
     public function __construct()
     {
-        throw_unless(Feature::active("customer-survey-decline"), NotFoundHttpException::class);
+        throw_unless(Feature::active('customer-survey-decline'), NotFoundHttpException::class);
     }
 
     public function index()

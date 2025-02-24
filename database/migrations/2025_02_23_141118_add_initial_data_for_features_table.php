@@ -6,7 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 return new class extends Migration
 {
     private array $features = [
-        'customer-survey-decline'
+        'customer-survey-decline',
     ];
 
     /**
@@ -14,7 +14,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        foreach($this->features as $feature) {
+        foreach ($this->features as $feature) {
             Feature::query()
                 ->create([
                     'name' => $feature,
@@ -28,7 +28,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        foreach($this->features as $feature) {
+        foreach ($this->features as $feature) {
             Feature::query()
                 ->where('name', $feature)
                 ->delete();

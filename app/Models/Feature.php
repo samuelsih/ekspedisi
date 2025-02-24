@@ -9,12 +9,12 @@ class Feature extends Model
     public static function active(string $feature)
     {
         $res = self::query()->where('name', $feature)->first();
-        if(! $res) {
+        if (! $res) {
             return false;
         }
 
         $active = $res['is_active'];
-        if($active) {
+        if ($active) {
             return true;
         }
 
