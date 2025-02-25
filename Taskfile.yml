@@ -4,6 +4,8 @@ tasks:
   default:
     cmds:
       - git pull
+      - composer install --no-dev --optimize-autoloader
+      - npm i
       - php artisan migrate
       - php artisan optimize:clear
       - php artisan filament:optimize-clear
