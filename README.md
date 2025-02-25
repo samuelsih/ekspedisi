@@ -42,10 +42,11 @@
 
 6. Install dependencies
    ```bash
-   composer install --no-dev --optimize-autoloader
+   composer install --no-dev
    npm install
 
    php artisan key:generate
+   npm run build
    ```
 
 7. Check if `database.sqlite` is already created in `database/database.sqlite`. If not created, you can manually create it using touch `database/database.sqlite`.
@@ -59,13 +60,6 @@
    sudo chmod -R 775 database
 
    php artisan migrate
-   ```
-
-9. Build optimized project for production.
-   ```bash
-   php artisan optimize
-   php artisan filament:optimize
-   npm run build
    ```
 
 #### Setup Web Server (Optional).
