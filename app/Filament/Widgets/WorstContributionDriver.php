@@ -2,18 +2,18 @@
 
 namespace App\Filament\Widgets;
 
-use Filament\Support\RawJs;
-use Filament\Widgets\ChartWidget;
+use App\Filament\Traits\HasExtraJSBar;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Illuminate\Support\Facades\DB;
+use Leandrocfe\FilamentApexCharts\Widgets\ApexChartWidget;
 
-class WorstContributionDriver extends ChartWidget
+class WorstContributionDriver extends ApexChartWidget
 {
-    use InteractsWithPageFilters;
+    use HasExtraJSBar, InteractsWithPageFilters;
 
     protected static ?string $heading = 'Worst Rating by Contribution';
 
-    protected function getData(): array
+    protected function getOptions(): array
     {
         $start = $this->filters['startDate'];
         $end = $this->filters['endDate'];
@@ -74,39 +74,38 @@ class WorstContributionDriver extends ChartWidget
         $data = collect($result);
 
         return [
-            'datasets' => [
+            'chart' => [
+                'type' => 'bar',
+                'height' => 300,
+            ],
+            'series' => [
                 [
-                    'label' => 'Poin',
-                    'data' => $data->pluck('driver_contribution')->toArray(),
+                    'name' => '',
+                    'data' => $data->pluck('driver_contribution')->map(fn ($v) => round($v, 2))->toArray(),
                 ],
             ],
-            'labels' => $data->map(fn ($customer) => "{$customer->name}")->toArray(),
+            'xaxis' => [
+                'categories' => $data->map(fn ($driver) => "{$driver->name}")->toArray(),
+                'labels' => [
+                    'style' => [
+                        'fontFamily' => 'inherit',
+                    ],
+                ],
+            ],
+            'yaxis' => [
+                'labels' => [
+                    'style' => [
+                        'fontFamily' => 'inherit',
+                    ],
+                ],
+            ],
+            'colors' => ['#f59e0b'],
+            'plotOptions' => [
+                'bar' => [
+                    'borderRadius' => 3,
+                    'horizontal' => false,
+                ],
+            ],
         ];
-    }
-
-    protected function getOptions(): array|RawJs|null
-    {
-        return RawJs::make(<<<'JS'
-            {
-                scales: {
-                    x: {
-                        ticks: {
-                            callback: function(value, index, ticks) {
-                                const limit = 5;
-                                const v = this.getLabelForValue(value);
-
-                                if (v.length > limit) return v.slice(0, limit) + '...';
-                                return v;
-                            }
-                        }
-                    }
-                }
-            }
-        JS);
-    }
-
-    protected function getType(): string
-    {
-        return 'bar';
     }
 }

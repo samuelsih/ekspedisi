@@ -4,7 +4,12 @@ tasks:
   default:
     cmds:
       - git pull
+      - composer install --no-dev --optimize-autoloader
       - php artisan migrate
+      - php artisan optimize:clear
+      - php artisan filament:optimize-clear
+      - php artisan optimize
+      - php artisan filament:optimize
       - npm run build
       - sudo systemctl restart ekspedisi-queue
       - sudo systemctl status ekspedisi-queue

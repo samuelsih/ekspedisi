@@ -14,6 +14,7 @@
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
         "league/flysystem-aws-s3-v3": "^3.29",
+        "leandrocfe/filament-apex-charts": "^3.1",
         "tightenco/ziggy": "^2.0"
     },
     "require-dev": {

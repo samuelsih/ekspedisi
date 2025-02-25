@@ -2,19 +2,19 @@
 
 namespace App\Filament\Widgets;
 
+use App\Filament\Traits\HasExtraJSBar;
 use App\Models\Customer;
-use Filament\Support\RawJs;
-use Filament\Widgets\ChartWidget;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
+use Leandrocfe\FilamentApexCharts\Widgets\ApexChartWidget;
 
-class BottomPointCustomer extends ChartWidget
+class BottomPointCustomer extends ApexChartWidget
 {
-    use InteractsWithPageFilters;
+    use HasExtraJSBar, InteractsWithPageFilters;
 
-    protected static ?string $heading = 'Bottom 5 Point Customer';
+    protected static ?string $heading = 'Bottom 10 Point Customer';
 
-    protected function getData(): array
+    protected function getOptions(): array
     {
         $start = $this->filters['startDate'];
         $end = $this->filters['endDate'];
@@ -38,39 +38,38 @@ class BottomPointCustomer extends ChartWidget
             ->get();
 
         return [
-            'datasets' => [
+            'chart' => [
+                'type' => 'bar',
+                'height' => 300,
+            ],
+            'series' => [
                 [
-                    'label' => 'Poin',
+                    'name' => '',
                     'data' => $customers->pluck('surveys_count')->toArray(),
                 ],
             ],
-            'labels' => $customers->map(fn ($customer) => "{$customer->name}")->toArray(),
+            'xaxis' => [
+                'categories' => $customers->map(fn ($customer) => "{$customer->name}")->toArray(),
+                'labels' => [
+                    'style' => [
+                        'fontFamily' => 'inherit',
+                    ],
+                ],
+            ],
+            'yaxis' => [
+                'labels' => [
+                    'style' => [
+                        'fontFamily' => 'inherit',
+                    ],
+                ],
+            ],
+            'colors' => ['#f59e0b'],
+            'plotOptions' => [
+                'bar' => [
+                    'borderRadius' => 3,
+                    'horizontal' => false,
+                ],
+            ],
         ];
-    }
-
-    protected function getOptions(): array|RawJs|null
-    {
-        return RawJs::make(<<<'JS'
-            {
-                scales: {
-                    x: {
-                        ticks: {
-                            callback: function(value, index, ticks) {
-                                const limit = 5;
-                                const v = this.getLabelForValue(value);
-
-                                if (v.length > limit) return v.slice(0, limit) + '...';
-                                return v;
-                            }
-                        }
-                    }
-                }
-            }
-        JS);
-    }
-
-    protected function getType(): string
-    {
-        return 'bar';
     }
 }
