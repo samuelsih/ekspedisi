@@ -16,10 +16,10 @@ class CustomerImporter extends Importer
         return [
             ImportColumn::make('id_customer')
                 ->requiredMapping()
-                ->rules(['required', 'min:5', 'max:100']),
+                ->rules(['required', 'min:1', 'max:100']),
             ImportColumn::make('name')
                 ->requiredMapping()
-                ->rules(['required', 'min:5', 'max:100']),
+                ->rules(['required', 'min:1', 'max:100']),
         ];
     }
 

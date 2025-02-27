@@ -32,11 +32,11 @@ class CustomerResource extends Resource implements HasShieldPermissions
                 Forms\Components\TextInput::make('id_customer')
                     ->label('ID Customer')
                     ->required()
-                    ->minLength(5)
+                    ->minLength(1)
                     ->maxLength(100),
                 Forms\Components\TextInput::make('name')
                     ->required()
-                    ->minLength(5)
+                    ->minLength(1)
                     ->maxLength(100),
             ]);
     }
