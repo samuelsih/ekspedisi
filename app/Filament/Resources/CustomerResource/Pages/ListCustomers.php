@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources\CustomerResource\Pages;
 
-use App\Filament\Imports\CustomerImporter;
 use App\Filament\Resources\CustomerResource;
+use App\Imports\CustomerExcelImport;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
@@ -14,11 +14,24 @@ class ListCustomers extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\ImportAction::make()
+            \EightyNine\ExcelImport\ExcelImportAction::make()
+                ->use(CustomerExcelImport::class)
                 ->color('primary')
                 ->label('Import toko')
-                ->importer(CustomerImporter::class)
-                ->visible(auth()->user()->can('import_customer')),
+                ->visible(auth()->user()->can('import_customer'))
+                ->validateUsing([
+                    'id_customer' => ['required', 'min:1', 'max:100'],
+                    'name' => ['required', 'min:1', 'max:255'],
+                ])
+                ->sampleExcel(
+                    sampleData: [
+                        ['id_customer' => '123123', 'name' => 'Test A'],
+                        ['id_customer' => '456456', 'name' => 'Test B'],
+                    ],
+                    fileName: 'sample-customer.xlsx',
+                    sampleButtonLabel: 'Download Template',
+                ),
+
             Actions\CreateAction::make(),
         ];
     }
