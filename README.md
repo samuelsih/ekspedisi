@@ -87,3 +87,22 @@
    ```bash
    sudo service caddy restart
    ```
+
+
+#### AWS CORS Problem
+Copy this to your cors 
+```xml
+<CORSConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+  <CORSRule>
+    <AllowedMethod>GET</AllowedMethod>
+    <AllowedMethod>PUT</AllowedMethod>
+    <AllowedMethod>DELETE</AllowedMethod>
+    <AllowedMethod>HEAD</AllowedMethod>
+    <AllowedMethod>POST</AllowedMethod>
+    <AllowedOrigin>*</AllowedOrigin>
+    <AllowedHeader>*</AllowedHeader>
+    <MaxAgeSeconds>3000</MaxAgeSeconds>
+    <ExposeHeader>ETag</ExposeHeader>
+  </CORSRule>
+</CORSConfiguration>
+```
