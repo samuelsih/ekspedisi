@@ -43,4 +43,9 @@ class CustomerImporter extends Importer
 
         return $body;
     }
+
+    public function getFileDisk(): string
+    {
+        return 's3';
+    }
 }
