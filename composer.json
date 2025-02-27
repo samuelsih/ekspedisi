@@ -8,7 +8,6 @@
     "require": {
         "php": "^8.2",
         "bezhansalleh/filament-shield": "^3.3",
-        "eightynine/filament-excel-import": "^3.1",
         "filament/filament": "3.2.137",
         "inertiajs/inertia-laravel": "^2.0",
         "laravel/framework": "^11.31",

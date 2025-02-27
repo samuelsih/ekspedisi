@@ -3,8 +3,11 @@
 namespace App\Filament\Resources\CustomerResource\Pages;
 
 use App\Filament\Resources\CustomerResource;
-use App\Imports\CustomerExcelImport;
+use App\Jobs\ImportCustomerJob;
 use Filament\Actions;
+use Filament\Forms\Components\FileUpload;
+use Filament\Notifications\Events\DatabaseNotificationsSent;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
 
 class ListCustomers extends ListRecords
@@ -14,24 +17,29 @@ class ListCustomers extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            \EightyNine\ExcelImport\ExcelImportAction::make()
-                ->use(CustomerExcelImport::class)
+            Actions\Action::make('import-toko')
+                ->label('Import Toko')
                 ->color('primary')
-                ->label('Import toko')
-                ->visible(auth()->user()->can('import_customer'))
-                ->validateUsing([
-                    'id_customer' => ['required', 'min:1', 'max:100'],
-                    'name' => ['required', 'min:1', 'max:255'],
+                ->requiresConfirmation()
+                ->form([
+                    FileUpload::make('file')
+                        ->disk('s3')
+                        ->visibility('private'),
                 ])
-                ->sampleExcel(
-                    sampleData: [
-                        ['id_customer' => '123123', 'name' => 'Test A'],
-                        ['id_customer' => '456456', 'name' => 'Test B'],
-                    ],
-                    fileName: 'sample-customer.xlsx',
-                    sampleButtonLabel: 'Download Template',
-                ),
+                ->action(function (array $data) {
+                    $user = auth()->user();
 
+                    ImportCustomerJob::dispatch($user, $data['file']);
+
+                    Notification::make()
+                        ->title('Upload Success')
+                        ->success()
+                        ->body('This will be processed in background. Check notifications when import is successful.')
+                        ->send()
+                        ->sendToDatabase($user);
+
+                    event(new DatabaseNotificationsSent($user));
+                }),
             Actions\CreateAction::make(),
         ];
     }
