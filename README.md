@@ -1,19 +1,20 @@
 # Ekspedisi JTA
 
 ## Installation on Server:
-### This assumed that you run below commands directly in server and do not use some CI/CD tools / some sort of containerization.
+### This assumed that you run below commands directly in server and do not use some CI/CD tools / some sort of containerization. Also the configuration is in Ubuntu.
 
 #### Setup Project
 1. Install php
    ```bash
    sudo apt install php
-   sudo apt install php-ctype php-curl php-dom php-fileinfo php-mbstring php-pdo php-tokenizer php-xml php-intl php-imap   
+   sudo apt install php-cli php-ctype php-curl php-dom php-fileinfo php-mbstring php-pdo php-tokenizer php-xml php-intl php-imap php-sqlite3 php-zip
    ```
 
 2. Remove apache2
    ```bash
    sudo service apache2 stop
    sudo apt-get purge apache2 apache2-utils apache2-bin apache2.2-common
+   sudo apt autoremove
    which apache2 # should print nothing
    ```
 
@@ -28,12 +29,12 @@
 
 4. Install NodeJS with `fnm`
    ```bash
-   sudo curl -fsSL https://fnm.vercel.app/install | bash
+   curl -fsSL https://fnm.vercel.app/install | bash
    source .bashrc # optional
    fnm install 22
    ```
 
-5. Clone this project, then copy `.env`
+5. Clone this project, then copy `.env`. (Make sure to set correct owner and permission in a cloned project)
    ```bash
    cd /your/cloned/project
    cp .env.example .env
