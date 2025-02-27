@@ -41,7 +41,7 @@ return [
     |
     */
 
-    'default_filesystem_disk' => env('FILAMENT_FILESYSTEM_DISK', 's3'),
+    'default_filesystem_disk' => env('FILAMENT_FILESYSTEM_DISK', 'local'),
 
     /*
     |--------------------------------------------------------------------------
