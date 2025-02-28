@@ -25,12 +25,15 @@ class CustomerImporter extends Importer
 
     public function resolveRecord(): ?Customer
     {
-        // return Customer::firstOrNew([
-        //     // Update existing records, matching them by `$this->data['column_name']`
-        //     'email' => $this->data['email'],
-        // ]);
+        $customer = Customer::query()->where('id_customer', $this->data['id_customer'])->first();
+        if(empty($customer)) {
+            return new Customer;
+        }
 
-        return new Customer;
+        $customer->name = $this->data['name'];
+        $customer->save();
+
+        return $customer;
     }
 
     public static function getCompletedNotificationBody(Import $import): string
