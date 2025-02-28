@@ -63,6 +63,43 @@
    php artisan migrate
    ```
 
+9. Setup Queue System in `/etc/systemd/system/ekspedisi-queue.service`
+   ```bash
+   # Copy This and Dont Forget to Rename your-ekspedisi-project to your project
+   [Unit]
+   Description=Ekspedisi JTA Queue Worker
+   After=network.target
+
+   [Service]
+   User=sxavity
+   Group=sxavity
+   Restart=always
+   ExecStart=/usr/bin/php /var/www/your-ekspedisi-project/artisan queue:work
+
+   [Install]
+   WantedBy=multi-user.target   
+   ```
+
+   Save the file. After that, enable systemctl.
+   ```bash
+   sudo systemctl daemon-reload
+   sudo systemctl enable ekspedisi-queue
+   sudo systemctl start ekspedisi-queue
+   sudo systemctl status ekspedisi-queue # check if error occurs
+   ```
+
+10. Make Filament Admin User
+    ```bash
+    php artisan make:filament-user
+    ```
+    Fill in the prompt that given to you.
+
+11. Register as Super Admin
+    ```bash
+    php artisan shield:super-admin
+    ```
+
+
 #### Setup Web Server (Optional).
 1. Install [Caddy Web Server](https://caddyserver.com/)
    ```bash
@@ -73,7 +110,7 @@
    sudo apt install caddy
    ```
 
-2. Edit the configuration server to this one (just delete all the default content):
+2. Edit the configuration server to this one (just delete all the default content) in `/etc/caddy/Caddyfile`:
    ```caddy
     YOUR_DOMAIN_SERVER.com {
         root * /path/to/ekspedisi-jta/project/public
