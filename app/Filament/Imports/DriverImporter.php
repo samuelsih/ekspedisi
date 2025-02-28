@@ -25,12 +25,15 @@ class DriverImporter extends Importer
 
     public function resolveRecord(): ?Driver
     {
-        // return Driver::firstOrNew([
-        //     // Update existing records, matching them by `$this->data['column_name']`
-        //     'email' => $this->data['email'],
-        // ]);
+        $driver = Driver::query()->where('nik', $this->data['nik'])->first();
+        if(empty($driver)) {
+            return new Driver;
+        }
 
-        return new Driver;
+        $driver->name = $this->data['name'];
+        $driver->save();
+
+        return $driver;
     }
 
     public static function getCompletedNotificationBody(Import $import): string
