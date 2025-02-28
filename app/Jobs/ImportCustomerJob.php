@@ -53,7 +53,7 @@ class ImportCustomerJob implements ShouldQueue
 
             if (count($data) >= $batchSize) {
                 $success = $this->insertCustomer($data, $totalRows);
-                if(! $success) {
+                if (! $success) {
                     return;
                 }
 
@@ -65,7 +65,7 @@ class ImportCustomerJob implements ShouldQueue
 
         if (! empty($data)) {
             $success = $this->insertCustomer($data, $totalRows);
-            if(! $success) {
+            if (! $success) {
                 return;
             }
 

@@ -25,13 +25,11 @@ class DriverImporter extends Importer
 
     public function resolveRecord(): ?Driver
     {
-        $driver = Driver::query()->where('nik', $this->data['nik'])->first();
-        if(empty($driver)) {
-            return new Driver;
-        }
+        $driver = Driver::query()->firstOrNew(
+            ['nik' => $this->data['nik']]
+        );
 
         $driver->name = $this->data['name'];
-        $driver->save();
 
         return $driver;
     }

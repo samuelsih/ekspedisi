@@ -25,13 +25,11 @@ class CustomerImporter extends Importer
 
     public function resolveRecord(): ?Customer
     {
-        $customer = Customer::query()->where('id_customer', $this->data['id_customer'])->first();
-        if(empty($customer)) {
-            return new Customer;
-        }
+        $customer = Customer::query()->firstOrNew(
+            ['id_customer' => $this->data['id_customer']]
+        );
 
         $customer->name = $this->data['name'];
-        $customer->save();
 
         return $customer;
     }
