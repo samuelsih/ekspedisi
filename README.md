@@ -6,6 +6,7 @@
       - [Setup Web Server (Optional).](#setup-web-server-optional)
       - [Setup Face Detection (Docker)](#setup-face-detection-docker)
   - [AWS CORS Problem](#aws-cors-problem)
+      - [Todo](#todo)
 
 
 ## Installation on Server:
@@ -79,8 +80,8 @@ This assumed that you run below commands directly in server and do not use some 
    After=network.target
 
    [Service]
-   User=sxavity
-   Group=sxavity
+   User=your-user
+   Group=your-group
    Restart=always
    ExecStart=/usr/bin/php /var/www/your-ekspedisi-project/artisan queue:work
 
@@ -166,3 +167,9 @@ Copy this to your cors
   </CORSRule>
 </CORSConfiguration>
 ```
+
+#### Todo
+1. Change database to dedicated one (MySQL, PostgreSQL)
+2. If you want to still use `sqlite`, use [LiteStream](https://litestream.io) for incremental backup.
+3. Split queue worker to use dedicated machine.
+4. Tweak php-fpm worker process based on request per second and machine specification.
