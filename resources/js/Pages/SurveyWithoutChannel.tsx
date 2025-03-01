@@ -108,8 +108,8 @@ export default function Survey({ title, subtitle, questions, showLinkToSurveyDec
         if(!imgBlob) {
             toast({
                 variant: "destructive",
-                title: "Sedang Mengambil Gambar",
-                description: "Gambar masih diproses. Tunggu beberapa saat lalu kirim kembali",
+                title: "Sedang Memproses Foto",
+                description: "Foto sedang diproses. Anda terlalu cepat mengisi rating.",
             })
 
             setIsSubmit(false)

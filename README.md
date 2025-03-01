@@ -106,6 +106,7 @@ This assumed that you run below commands directly in server and do not use some 
 11. Register as Super Admin
     ```bash
     php artisan shield:super-admin
+    php artisan shield:install admin
     ```
 
 

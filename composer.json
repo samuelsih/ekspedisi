@@ -9,6 +9,7 @@
         "php": "^8.2",
         "awcodes/light-switch": "^1.0",
         "bezhansalleh/filament-shield": "^3.3",
+        "eightcedars/filament-inactivity-guard": "^0.2.0",
         "filament/filament": "3.2.137",
         "inertiajs/inertia-laravel": "^2.0",
         "laravel/framework": "^11.31",
