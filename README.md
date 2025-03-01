@@ -6,7 +6,7 @@
       - [Setup Web Server (Optional).](#setup-web-server-optional)
       - [Setup Face Detection (Docker)](#setup-face-detection-docker)
   - [AWS CORS Problem](#aws-cors-problem)
-      - [Todo](#todo)
+  - [Todo](#todo)
 
 
 ## Installation on Server:
@@ -168,7 +168,7 @@ Copy this to your cors
 </CORSConfiguration>
 ```
 
-#### Todo
+## Todo
 1. Change database to dedicated one (MySQL, PostgreSQL)
 2. If you want to still use `sqlite`, use [LiteStream](https://litestream.io) for incremental backup.
 3. Split queue worker to use dedicated machine.
