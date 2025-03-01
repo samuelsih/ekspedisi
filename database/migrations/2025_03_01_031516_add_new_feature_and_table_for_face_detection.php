@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    private string $feature = "survey-face-detection";
+    private string $feature = 'survey-face-detection';
 
     /**
      * Run the migrations.

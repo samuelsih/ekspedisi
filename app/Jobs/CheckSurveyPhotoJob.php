@@ -24,23 +24,24 @@ class CheckSurveyPhotoJob implements ShouldQueue
      */
     public function handle(): void
     {
-        if(! Feature::active("survey-face-detection")) {
+        if (! Feature::active('survey-face-detection')) {
             return;
         }
 
         $image = Survey::query()->where('id', $this->surveyId)->first(['img_url']);
-        if(empty($image)) {
-            Log::warning("Survey is not found for image detection", ["id" => $this->surveyId]);
+        if (empty($image)) {
+            Log::warning('Survey is not found for image detection', ['id' => $this->surveyId]);
+
             return;
         }
 
         $imgUrl = $image['img_url'];
 
-        $dockerImgName = env("FACE_DETECTION_IMG_NAME");
+        $dockerImgName = env('FACE_DETECTION_IMG_NAME');
 
-        $ok = shell_exec('docker run --rm ' . $dockerImgName . ' "' . $imgUrl . '"') === "True" ? true : false;
+        $ok = shell_exec('docker run --rm '.$dockerImgName.' "'.$imgUrl.'"') === 'True' ? true : false;
 
-        if(! $ok) {
+        if (! $ok) {
             Survey::query()->where('id', $this->surveyId)->update([
                 'face_detected' => false,
             ]);
