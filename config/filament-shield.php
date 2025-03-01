@@ -47,6 +47,7 @@ return [
             'force_delete_any',
             'export',
             'import',
+            'view_qr'
         ],
 
         'page' => 'page',

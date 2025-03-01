@@ -88,6 +88,7 @@ class DriverResource extends Resource implements HasShieldPermissions
                 Tables\Actions\Action::make('qr')
                     ->label('QR')
                     ->icon('heroicon-o-qr-code')
+                    ->visible(auth()->user()->can('view_qr_driver'))
                     ->action(function (Driver $driver) {
                         $nik = $driver->nik;
                         $name = $driver->name;
@@ -144,6 +145,7 @@ class DriverResource extends Resource implements HasShieldPermissions
         return [
             'view',
             'view_any',
+            'view_qr',
             'create',
             'update',
             'delete',

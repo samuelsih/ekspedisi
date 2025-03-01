@@ -68,8 +68,8 @@
         ],
         "prod": [
             "git pull",
-            "@php artisan migrate",
             "@composer install --no-dev --optimize-autoloader",
+            "@php artisan migrate",
             "@php artisan migrate",
             "@php artisan optimize:clear",
             "@php artisan filament:optimize-clear",
