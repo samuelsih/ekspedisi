@@ -1,9 +1,9 @@
 [project]
 name = "facedetector"
 version = "0.1.0"
-description = "Add your description here"
+description = "Simple Face Detector for Ekspedisi JTA"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.13"
 dependencies = [
     "numpy>=2.2.3",
     "opencv-python>=4.11.0.86",
@@ -11,6 +11,4 @@ dependencies = [
 ]
 
 [dependency-groups]
-dev = [
-    "ruff>=0.9.9",
-]
+dev = []

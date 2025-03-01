@@ -10,7 +10,7 @@ INPUT_WIDTH = 640
 INPUT_HEIGHT = 480
 
 
-def has_faces(img_url: str):
+def has_faces(img_url: str) -> bool:
     model = cv.FaceDetectorYN.create(
         model="face_detection_yunet_2023mar.onnx",
         config="",
