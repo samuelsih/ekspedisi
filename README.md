@@ -16,7 +16,7 @@ This assumed that you run below commands directly in server and do not use some 
 1. Install php
    ```bash
    sudo apt install php
-   sudo apt install php-cli php-ctype php-curl php-dom php-fileinfo php-mbstring php-pdo php-tokenizer php-xml php-intl php-imap php-sqlite3 php-zip php-imagick
+   sudo apt install php-cli php-ctype php-curl php-dom php-fileinfo php-mbstring php-pdo php-tokenizer php-xml php-intl php-imap php-sqlite3 php-zip php-imagick php-gd
    ```
 
 2. Remove apache2

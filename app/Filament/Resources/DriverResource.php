@@ -10,6 +10,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Uri;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
@@ -91,7 +92,7 @@ class DriverResource extends Resource implements HasShieldPermissions
                         $nik = $driver->nik;
                         $name = $driver->name;
 
-                        $uri = (string) Uri::of(env('APP_URL'))
+                        $uri = (string) Uri::of(Config::get('app.url'))
                             ->withQuery(['nik' => $nik]);
 
                         return response()->streamDownload(function () use ($uri) {
