@@ -42,7 +42,7 @@ class SurveyController extends Controller
         ]);
     }
 
-    public function indexWithoutChannel()
+    public function indexWithoutChannel(Request $request)
     {
         $questions = Question::query()->where('is_active', true)->get(['id', 'title']);
 
@@ -56,12 +56,24 @@ class SurveyController extends Controller
 
         $linkSurveyDeclinedEnabled = Feature::active('customer-survey-decline');
 
-        return Inertia::render('SurveyWithoutChannel', [
+        $dependencies = [
             'title' => $title,
             'subtitle' => $subtitle,
             'questions' => $questions,
             'showLinkToSurveyDecline' => $linkSurveyDeclinedEnabled,
-        ]);
+        ];
+
+        $nik = $request->query('nik');
+        if (! empty($nik)) {
+            $driver = Driver::query()
+                ->where('nik', $nik)
+                ->first(['id', 'name']);
+
+            $dependencies['driverId'] = $driver?->id;
+            $dependencies['driverName'] = $driver?->name;
+        }
+
+        return Inertia::render('SurveyWithoutChannel', $dependencies);
     }
 
     public function storeWithoutChannel(SurveyWithoutChannelRequest $request)

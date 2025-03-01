@@ -54,6 +54,8 @@ interface Props {
     subtitle: string;
     questions: Question[];
     showLinkToSurveyDecline: boolean;
+    driverId?: string;
+    driverName?: string;
 }
 
 interface CustomerID {
@@ -68,7 +70,7 @@ interface Driver {
     name: string;
 }
 
-export default function Survey({ title, subtitle, questions, showLinkToSurveyDecline }: Props) {
+export default function Survey({ title, subtitle, questions, showLinkToSurveyDecline, driverId, driverName }: Props) {
     const { toast } = useToast()
     const onPermissionDenied = () => {
         toast({
@@ -163,6 +165,49 @@ export default function Survey({ title, subtitle, questions, showLinkToSurveyDec
     const [isSheetOpen, setIsSheetOpen] = useState(false)
     const [customCustomerId, setCustomCustomerId] = useState("")
 
+    const renderDriverComponent = () => {
+        if(driverId && driverName) {
+            form.setValue("driverId", driverId)
+            const nik = new URLSearchParams(document.location.search).get('nik')
+
+            return (
+                <div>
+                    <FormLabel>NIK Supir</FormLabel>
+                    <Input value={`${nik} - ${driverName}`} className="mt-2" disabled />
+                </div>
+            )
+        }
+
+        return (
+            <FormField
+                control={form.control}
+                name="driverId"
+                render={({ field }) => (
+                    <Selector
+                        searchKey="driver"
+                        label="NIK Supir"
+                        value={field.value}
+                        fetchItemsFn={fetchDrivers}
+                        onChange={field.onChange}
+                        renderDisplayOnFound={(items) => {
+                            if(!field.value) {
+                                return "Cari NIK Supir"
+                            }
+
+                            const selectedItem = items.find((item) => item.id === field.value);
+                            if(!selectedItem) {
+                                return "Cari NIK Supir"
+                            }
+
+                            return `${selectedItem.nik} (${selectedItem.name})`
+                        }}
+                        renderDropdownList={(driver: Driver) => `${driver.nik} (${driver.name})`}
+                    />
+                )}
+            />
+        )
+    }
+
     return (
         <div className="container mx-auto p-8">
             <Head title="Survey" />
@@ -234,32 +279,7 @@ export default function Survey({ title, subtitle, questions, showLinkToSurveyDec
                         </>
                     )}
                 />
-                <FormField
-                    control={form.control}
-                    name="driverId"
-                    render={({ field }) => (
-                        <Selector
-                            searchKey="driver"
-                            label="NIK Supir"
-                            value={field.value}
-                            fetchItemsFn={fetchDrivers}
-                            onChange={field.onChange}
-                            renderDisplayOnFound={(items) => {
-                                if(!field.value) {
-                                    return "Cari NIK Supir"
-                                }
-
-                                const selectedItem = items.find((item) => item.id === field.value);
-                                if(!selectedItem) {
-                                    return "Cari NIK Supir"
-                                }
-
-                                return `${selectedItem.nik} (${selectedItem.name})`
-                            }}
-                            renderDropdownList={(driver: Driver) => `${driver.nik} (${driver.name})`}
-                        />
-                    )}
-                />
+                {renderDriverComponent()}
 
                 {questions.map(question => (
                     <FormField
