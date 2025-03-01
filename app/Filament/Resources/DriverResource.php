@@ -10,6 +10,8 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Uri;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class DriverResource extends Resource implements HasShieldPermissions
 {
@@ -81,6 +83,24 @@ class DriverResource extends Resource implements HasShieldPermissions
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+
+                Tables\Actions\Action::make('qr')
+                    ->label('QR')
+                    ->icon('heroicon-o-qr-code')
+                    ->action(function (Driver $driver) {
+                        $nik = $driver->nik;
+                        $name = $driver->name;
+
+                        $uri = (string) Uri::of(env('APP_URL'))
+                            ->withQuery(['nik' => $nik]);
+
+                        return response()->streamDownload(function () use ($uri) {
+                            echo QrCode::format('png')->size(360)->generate($uri);
+                        },
+                            "{$nik}-{$name}.png"
+                        );
+                    }),
+
                 Tables\Actions\DeleteAction::make()
                     ->after(function (Driver $record) {
                         $record->customer_survey_declines()->delete();
