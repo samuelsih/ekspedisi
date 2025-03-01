@@ -1,7 +1,15 @@
 # Ekspedisi JTA
 
+- [Ekspedisi JTA](#ekspedisi-jta)
+  - [Installation on Server:](#installation-on-server)
+      - [Setup Project](#setup-project)
+      - [Setup Web Server (Optional).](#setup-web-server-optional)
+      - [Setup Face Detection (Docker)](#setup-face-detection-docker)
+  - [AWS CORS Problem](#aws-cors-problem)
+
+
 ## Installation on Server:
-### This assumed that you run below commands directly in server and do not use some CI/CD tools / some sort of containerization. Also the configuration is in Ubuntu.
+This assumed that you run below commands directly in server and do not use some CI/CD tools / some sort of containerization. Also the configuration is in Ubuntu.
 
 #### Setup Project
 1. Install php
@@ -126,8 +134,22 @@
    sudo service caddy restart
    ```
 
+#### Setup Face Detection (Docker)
+This assumed server has docker installed. If this project wants to activate `survey-face-detection` feature, then **This Step Is a Must**. 
 
-#### AWS CORS Problem
+1. `cd` to ekspedisi project.
+
+2. Build project
+   ```bash
+   docker build faceapp:latest facedetector
+   ```
+
+3. Fill required `.env`.
+   ```bash
+   FACE_DETECTION_IMG_NAME=faceapp:latest
+   ```
+
+## AWS CORS Problem
 Copy this to your cors 
 ```xml
 <CORSConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
