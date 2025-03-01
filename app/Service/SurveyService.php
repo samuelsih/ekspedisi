@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Jobs\CheckSurveyPhotoJob;
 use App\Models\Customer;
 use App\Models\Survey;
 use App\Models\SurveyAnswer;
@@ -42,6 +43,8 @@ class SurveyService
             $this->insertSurveyAnswers($survey, $validated['questions']);
 
             DB::commit();
+
+            CheckSurveyPhotoJob::dispatch($survey->id);
 
             return response()->json(['message' => 'OK'], 201);
         } catch (QueryException $e) {
