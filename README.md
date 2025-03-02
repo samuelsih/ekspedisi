@@ -10,7 +10,7 @@
 
 
 ## Installation on Server:
-This assumed that you run below commands directly in server and do not use some CI/CD tools / some sort of containerization. Also the configuration is in Ubuntu.
+This assumed that you run below commands directly in server and do not use some CI/CD tools / some sort of containerization. Also the configuration is in Ubuntu 24.04.
 
 #### Setup Project
 1. Install php
