@@ -141,18 +141,18 @@ This assumed server has docker installed. If this project wants to activate `sur
 
 1. `cd` to ekspedisi project.
 
-2. Build project
+2. Run `docker compose`.
    ```bash
-   docker build faceapp:latest facedetector
+   docker compose up -d
    ```
 
 3. Fill required `.env`.
    ```bash
-   FACE_DETECTION_IMG_NAME=faceapp:latest
+   FACE_DETECTION_IMG_NAME=http://localhost:5000
    ```
 
 ## AWS CORS Problem
-Copy this to your cors 
+Copy this to your s3 cors config
 ```xml
 <CORSConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
   <CORSRule>
@@ -171,6 +171,6 @@ Copy this to your cors
 
 ## Todo
 1. Change database to dedicated one (MySQL, PostgreSQL)
-2. If you want to still use `sqlite`, use [LiteStream](https://litestream.io) for incremental backup.
+2. If you still want to use `sqlite`, use [LiteStream](https://litestream.io) for incremental backup.
 3. Split queue worker to use dedicated machine.
 4. Tweak php-fpm worker process based on request per second and machine specification.
