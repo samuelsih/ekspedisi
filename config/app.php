@@ -128,11 +128,11 @@ return [
     | Face Detection Image
     |--------------------------------------------------------------------------
     |
-    | These configuration options determine the name of face detection image
+    | These configuration options determine the URL of face detection image
     | for driver's image validation feature. This will be only used when
     | the feature is enabled, so first you have to enable the feature.
     |
     */
 
-    'face_detection_image' => env('FACE_DETECTION_IMG_NAME', 'facedetector:latest'),
+    'face_detection_url' => env('FACE_DETECTION_IMG_URL', 'http://localhost:5000'),
 ];

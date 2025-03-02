@@ -7,7 +7,9 @@ use App\Models\Survey;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Uri;
 
 class CheckSurveyPhotoJob implements ShouldQueue
 {
@@ -38,9 +40,20 @@ class CheckSurveyPhotoJob implements ShouldQueue
 
         $imgUrl = $image['img_url'];
 
-        $dockerImgName = Config::get('app.face_detection_image');
+        $response = Http::get(
+            (string) Uri::of(Config::get('app.face_detection_url'))
+                ->withQuery(['img_url' => $imgUrl])
+        );
 
-        $ok = shell_exec('docker run --rm '.$dockerImgName.' "'.$imgUrl.'"') === 'False' ? false : true;
+        if (! $response->successful()) {
+            Log::warning('Face detection url hit is not success',
+                ['id' => $this->surveyId, 'status' => $response->status()]
+            );
+
+            return;
+        }
+
+        $ok = $response->body() === 'False' ? false : true;
 
         if (! $ok) {
             Survey::query()->where('id', $this->surveyId)->update([
