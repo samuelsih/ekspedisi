@@ -87,6 +87,7 @@ class DriverResource extends Resource implements HasShieldPermissions
 
                 Tables\Actions\Action::make('qr')
                     ->label('QR')
+                    ->color('info')
                     ->icon('heroicon-o-qr-code')
                     ->visible(auth()->user()->can('view_qr_driver'))
                     ->action(function (Driver $driver) {

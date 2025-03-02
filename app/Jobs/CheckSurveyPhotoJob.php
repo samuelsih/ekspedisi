@@ -6,6 +6,7 @@ use App\Models\Feature;
 use App\Models\Survey;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 
 class CheckSurveyPhotoJob implements ShouldQueue
@@ -37,7 +38,7 @@ class CheckSurveyPhotoJob implements ShouldQueue
 
         $imgUrl = $image['img_url'];
 
-        $dockerImgName = env('FACE_DETECTION_IMG_NAME');
+        $dockerImgName = Config::get('app.face_detection_image');
 
         $ok = shell_exec('docker run --rm '.$dockerImgName.' "'.$imgUrl.'"') === 'True' ? true : false;
 

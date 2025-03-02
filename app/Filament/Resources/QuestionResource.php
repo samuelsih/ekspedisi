@@ -25,6 +25,11 @@ class QuestionResource extends Resource implements HasShieldPermissions
                     ->required()
                     ->minLength(5)
                     ->maxLength(100),
+                Forms\Components\TextInput::make('value')
+                    ->required()
+                    ->numeric()
+                    ->minValue(1)
+                    ->maxValue(100),
                 Forms\Components\Select::make('is_active')
                     ->label('Status')
                     ->options([
@@ -39,12 +44,13 @@ class QuestionResource extends Resource implements HasShieldPermissions
     {
         return $table
             ->query(function () {
-                return Question::query()->select(['id', 'title', 'is_active', 'created_at', 'deleted_at']);
+                return Question::query()->select(['id', 'title', 'value', 'is_active', 'created_at', 'deleted_at']);
             })
             ->defaultSort('created_at', 'desc')
             ->columns([
                 Tables\Columns\TextColumn::make('index')->label('No.')->rowIndex(),
                 Tables\Columns\TextColumn::make('title'),
+                Tables\Columns\TextColumn::make('value'),
                 Tables\Columns\TextColumn::make('is_active')
                     ->label('Status')
                     ->formatStateUsing(fn ($state) => $state ? 'Active' : 'Not Active'),
