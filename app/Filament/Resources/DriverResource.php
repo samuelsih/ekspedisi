@@ -97,8 +97,6 @@ class DriverResource extends Resource implements HasShieldPermissions
                             ->withQuery(['nik' => $nik]);
 
                         return response()->streamDownload(function () use ($uri) {
-                            header("image/png");
-
                             echo QrCode::format('png')
                                 ->size(300)
                                 ->margin(5)
