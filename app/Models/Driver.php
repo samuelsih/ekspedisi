@@ -37,4 +37,9 @@ class Driver extends Model
 
         return round(($totalSurvey / $divider) * $avgRating, 3);
     }
+
+    public function questions()
+    {
+        return $this->hasManyThrough(Question::class, SurveyAnswer::class);
+    }
 }

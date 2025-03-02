@@ -40,10 +40,13 @@ class TopContributionDriver extends ApexChartWidget
                     GROUP by driver_id
                 ),
                 survey_answers_avg_rating AS (
-                    SELECT s.driver_id AS driver_id, COALESCE(AVG(sa.value), 0) as avg_rating
+                    SELECT s.driver_id AS driver_id,
+                        COALESCE(SUM(sa.value * q.value) * 1.0 / SUM(q.value), 0) as avg_rating
                     FROM survey_answers sa
                     JOIN surveys s
                     ON sa.survey_id = s.id
+                    JOIN questions q
+                    ON sa.question_id = q.id
                     WHERE s.deleted_at IS NULL
                     AND (NULLIF(:startDate, '') IS NULL OR DATE(s.created_at) >= NULLIF(:startDate, ''))
                     AND (NULLIF(:endDate, '') IS NULL OR DATE(s.created_at) <= NULLIF(:endDate, ''))

@@ -40,7 +40,7 @@ class CheckSurveyPhotoJob implements ShouldQueue
 
         $dockerImgName = Config::get('app.face_detection_image');
 
-        $ok = shell_exec('docker run --rm '.$dockerImgName.' "'.$imgUrl.'"') === 'True' ? true : false;
+        $ok = shell_exec('docker run --rm '.$dockerImgName.' "'.$imgUrl.'"') === 'False' ? false : true;
 
         if (! $ok) {
             Survey::query()->where('id', $this->surveyId)->update([

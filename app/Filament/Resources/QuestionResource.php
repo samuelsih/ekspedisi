@@ -26,6 +26,7 @@ class QuestionResource extends Resource implements HasShieldPermissions
                     ->minLength(5)
                     ->maxLength(100),
                 Forms\Components\TextInput::make('value')
+                    ->label('Quantity')
                     ->required()
                     ->numeric()
                     ->minValue(1)
@@ -50,7 +51,7 @@ class QuestionResource extends Resource implements HasShieldPermissions
             ->columns([
                 Tables\Columns\TextColumn::make('index')->label('No.')->rowIndex(),
                 Tables\Columns\TextColumn::make('title'),
-                Tables\Columns\TextColumn::make('value'),
+                Tables\Columns\TextColumn::make('value')->label('Quantity'),
                 Tables\Columns\TextColumn::make('is_active')
                     ->label('Status')
                     ->formatStateUsing(fn ($state) => $state ? 'Active' : 'Not Active'),
