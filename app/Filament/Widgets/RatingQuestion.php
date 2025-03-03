@@ -10,7 +10,7 @@ use Leandrocfe\FilamentApexCharts\Widgets\ApexChartWidget;
 
 class RatingQuestion extends ApexChartWidget
 {
-    use InteractsWithPageFilters, HasExtraJSBar;
+    use HasExtraJSBar, InteractsWithPageFilters;
 
     protected static ?string $heading = 'Rating By Question';
 

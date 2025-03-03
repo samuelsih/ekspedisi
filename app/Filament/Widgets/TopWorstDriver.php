@@ -10,7 +10,7 @@ use Leandrocfe\FilamentApexCharts\Widgets\ApexChartWidget;
 
 class TopWorstDriver extends ApexChartWidget
 {
-    use InteractsWithPageFilters, HasExtraJSBar;
+    use HasExtraJSBar, InteractsWithPageFilters;
 
     protected static ?string $heading = 'Worst 5 Driver (Avg Star Rating Only)';
 

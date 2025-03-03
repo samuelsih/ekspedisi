@@ -43,7 +43,7 @@ class AntiSurveyController extends Controller
     public function store(AntiSurveyRequest $request)
     {
         $validated = $request->validated();
-        Log::debug("ini request", $validated);
+        Log::debug('ini request', $validated);
 
         try {
             DB::beginTransaction();

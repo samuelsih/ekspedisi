@@ -3,7 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Form, FormField, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 import {
 	Sheet,
 	SheetContent,
@@ -48,14 +54,14 @@ interface Driver {
 }
 
 interface Answer {
-    id: string;
-    answer: string;
+	id: string;
+	answer: string;
 }
 
 interface Props {
 	title: string;
 	subtitle: string;
-    answers: Answer[];
+	answers: Answer[];
 }
 
 export default function AntiSurvey({ title, subtitle, answers }: Props) {
@@ -243,31 +249,24 @@ export default function AntiSurvey({ title, subtitle, answers }: Props) {
 						control={form.control}
 						name="answerId"
 						render={({ field }) => (
-                            <div>
-                            <Label className="block mb-4">Alasan</Label>
-                            <Select
-                                onValueChange={field.onChange}
-                                value={field.value}
-                            >
-                                <SelectTrigger ref={field.ref}>
-                                    <SelectValue placeholder="Pilih Alasan" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {answers.map((answer) => (
-                                        <SelectItem
-                                            key={answer.id}
-                                            value={answer.id}
-                                        >
-                                            {answer.answer}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                            <FormMessage>
-                                {form.formState.errors.answerId?.message}
-                            </FormMessage>
-                            </div>
-
+							<div>
+								<Label className="block mb-4">Alasan</Label>
+								<Select onValueChange={field.onChange} value={field.value}>
+									<SelectTrigger ref={field.ref}>
+										<SelectValue placeholder="Pilih Alasan" />
+									</SelectTrigger>
+									<SelectContent>
+										{answers.map((answer) => (
+											<SelectItem key={answer.id} value={answer.id}>
+												{answer.answer}
+											</SelectItem>
+										))}
+									</SelectContent>
+								</Select>
+								<FormMessage>
+									{form.formState.errors.answerId?.message}
+								</FormMessage>
+							</div>
 						)}
 					/>
 

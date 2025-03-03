@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\CustomerSurveyDeclineAnswerResource\Pages;
-use App\Filament\Resources\CustomerSurveyDeclineAnswerResource\RelationManagers;
 use App\Models\CustomerSurveyDeclineAnswer;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Forms;
@@ -11,8 +10,6 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class CustomerSurveyDeclineAnswerResource extends Resource implements HasShieldPermissions
 {
