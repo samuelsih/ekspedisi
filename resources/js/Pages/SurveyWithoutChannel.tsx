@@ -1,6 +1,7 @@
 import CameraScreenshot from "@/components/CameraScreenshot";
 import Selector from "@/components/SelectSearch";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge"
 import {
 	Form,
 	FormControl,
@@ -91,6 +92,15 @@ interface Driver {
 	nik: string;
 	name: string;
 }
+
+const RatingCaption: Record<number, string> = {
+    0: 'Berikan Nilai Anda',
+	1: "Sangat Buruk",
+	2: "Buruk",
+	3: "Cukup",
+	4: "Baik",
+	5: "Sangat Baik",
+} as const;
 
 export default function Survey({
 	title,
@@ -358,7 +368,7 @@ export default function Survey({
 										/>
 									</FormControl>
 									<FormDescription>
-										Nilai ({field.value ?? 0}/5)
+                                        <strong>Nilai ({field.value ?? 0}/5) - </strong> <Badge>{RatingCaption[field.value]}</Badge>
 									</FormDescription>
 									<FormMessage>
 										{form.formState.errors.questions?.[question.id]?.message}
