@@ -60,10 +60,17 @@ class CustomerSurveyDeclineAnswerResource extends Resource implements HasShieldP
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->after(function (CustomerSurveyDeclineAnswer $record) {
+                        $record->customer_survey_declines()->delete();
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->after(function (CustomerSurveyDeclineAnswer $record) {
+                            $record->customer_survey_declines()->delete();
+                        }),
                 ]),
             ]);
     }
