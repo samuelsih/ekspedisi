@@ -24,4 +24,9 @@ class CustomerSurveyDecline extends Model
     {
         return $this->belongsTo(Channel::class);
     }
+
+    public function customer_survey_decline_answer()
+    {
+        return $this->belongsTo(CustomerSurveyDeclineAnswer::class);
+    }
 }

@@ -33,7 +33,7 @@ class AntiSurveyRequest extends FormRequest
             'customerId' => ['required'],
             'driverId' => ['required', 'exists:drivers,id'],
             'channelId' => ['required', 'exists:channels,id'],
-            'reason' => ['required', 'max:100'],
+            'answerId' => ['required', 'exists:customer_survey_decline_answers,id'],
         ];
     }
 
@@ -54,8 +54,8 @@ class AntiSurveyRequest extends FormRequest
             'channelId.required' => 'Channel tidak boleh kosong',
             'channelId.exists' => 'Channel tidak diketahui',
 
-            'reason.required' => 'Alasan tidak boleh kosong',
-            'reason.max' => 'Panjang alasan maksimal 100 karakter',
+            'answerId.required' => 'Alasan tidak boleh kosong',
+            'answerId.exists' => 'Jenis alasan tidak diketahui',
         ];
     }
 }

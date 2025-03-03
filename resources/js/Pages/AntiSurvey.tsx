@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Form, FormField, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
 	Sheet,
 	SheetContent,
@@ -11,7 +12,6 @@ import {
 	SheetTitle,
 	SheetTrigger,
 } from "@/components/ui/sheet";
-import { Textarea } from "@/components/ui/textarea";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -28,7 +28,7 @@ const formSchema = z.object({
 	driverId: z
 		.string({ message: "NIK Supir tidak boleh kosong" })
 		.nonempty("NIK Supir tidak boleh kosong"),
-	reason: z
+	answerId: z
 		.string({ message: "Alasan tidak boleh kosong" })
 		.nonempty("Alasan tidak boleh kosong"),
 });
@@ -47,12 +47,18 @@ interface Driver {
 	name: string;
 }
 
+interface Answer {
+    id: string;
+    answer: string;
+}
+
 interface Props {
 	title: string;
 	subtitle: string;
+    answers: Answer[];
 }
 
-export default function AntiSurvey({ title, subtitle }: Props) {
+export default function AntiSurvey({ title, subtitle, answers }: Props) {
 	const { toast } = useToast();
 	const form = useForm<AntiSurveySchema>({
 		resolver: zodResolver(formSchema),
@@ -82,7 +88,7 @@ export default function AntiSurvey({ title, subtitle }: Props) {
 		const formData = new FormData();
 		formData.append("customerId", schema.customerId);
 		formData.append("driverId", schema.driverId);
-		formData.append("reason", schema.reason);
+		formData.append("answerId", schema.answerId);
 
 		try {
 			await axios.postForm("/decline-survey", formData);
@@ -235,15 +241,33 @@ export default function AntiSurvey({ title, subtitle }: Props) {
 					/>
 					<FormField
 						control={form.control}
-						name="reason"
+						name="answerId"
 						render={({ field }) => (
-							<div>
-								<Label htmlFor="reason">Alasan</Label>
-								<Textarea className="mt-2" id="reason" {...field} />
-								<FormMessage>
-									{form.formState.errors.reason?.message}
-								</FormMessage>
-							</div>
+                            <div>
+                            <Label className="block mb-4">Alasan</Label>
+                            <Select
+                                onValueChange={field.onChange}
+                                value={field.value}
+                            >
+                                <SelectTrigger ref={field.ref}>
+                                    <SelectValue placeholder="Pilih Alasan" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {answers.map((answer) => (
+                                        <SelectItem
+                                            key={answer.id}
+                                            value={answer.id}
+                                        >
+                                            {answer.answer}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            <FormMessage>
+                                {form.formState.errors.answerId?.message}
+                            </FormMessage>
+                            </div>
+
 						)}
 					/>
 

@@ -47,7 +47,7 @@ class CustomerSurveyDeclineResource extends Resource implements HasShieldPermiss
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Terbuat')
                     ->formatStateUsing(fn (string $state) => Carbon::parse($state)->timezone('Asia/Jakarta')->format('M d Y, H:i:s')),
-                Tables\Columns\TextColumn::make('reason')->label('Alasan')->wrap(),
+                Tables\Columns\TextColumn::make('customer_survey_decline_answer.answer')->label('Alasan')->wrap(),
             ])
             ->filters([
                 SelectFilter::make('channel_id')
