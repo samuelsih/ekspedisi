@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\DriverResource\Pages;
 use App\Models\Driver;
+use App\Service\QRGeneratorService;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -12,7 +13,6 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Uri;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class DriverResource extends Resource implements HasShieldPermissions
 {
@@ -82,17 +82,9 @@ class DriverResource extends Resource implements HasShieldPermissions
                         $uri = (string) Uri::of(Config::get('app.url'))
                             ->withQuery(['nik' => $nik]);
 
-                        return response()->streamDownload(function () use ($uri) {
-                            echo QrCode::format('png')
-                                ->size(300)
-                                ->margin(5)
-                                ->color(0, 0, 0)
-                                ->backgroundColor(255, 255, 255)
-                                ->errorCorrection('H')
-                                ->generate($uri);
-                        },
-                            "{$nik}-{$name}.png"
-                        );
+                        return response()->streamDownload(function () use ($uri, $name) {
+                            echo (new QRGeneratorService)($uri, $name);
+                        }, "{$nik}-{$name}.png");
                     }),
 
                 Tables\Actions\DeleteAction::make()
