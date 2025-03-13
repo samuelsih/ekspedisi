@@ -8,7 +8,7 @@ class QRGeneratorService
 {
     public function __invoke(string $qrContent, ?string $qrName = null): string
     {
-        if(empty($qrName)) {
+        if (empty($qrName)) {
             return QrCode::format('png')
                 ->size(300)
                 ->margin(5)
@@ -19,16 +19,16 @@ class QRGeneratorService
         }
 
         $qrData = QrCode::format('png')
-                    ->size(300)
-                    ->margin(5)
-                    ->color(0, 0, 0)
-                    ->backgroundColor(255, 255, 255)
-                    ->errorCorrection('H')
-                    ->generate($qrContent);
+            ->size(300)
+            ->margin(5)
+            ->color(0, 0, 0)
+            ->backgroundColor(255, 255, 255)
+            ->errorCorrection('H')
+            ->generate($qrContent);
 
         $qrImage = imagecreatefromstring($qrData);
-        if(! $qrImage) {
-            throw new \RuntimeException("Cannot generate qr code, QR Data is null");
+        if (! $qrImage) {
+            throw new \RuntimeException('Cannot generate qr code, QR Data is null');
         }
 
         $qrWidth = imagesx($qrImage);
@@ -42,8 +42,8 @@ class QRGeneratorService
         $height = $qrHeight + $textHeight + $padding;
 
         $finalImage = imagecreatetruecolor($width, $height);
-        if(! $finalImage) {
-            throw new \RuntimeException("Cannot generate QR image canvas");
+        if (! $finalImage) {
+            throw new \RuntimeException('Cannot generate QR image canvas');
         }
 
         $white = imagecolorallocate($finalImage, 255, 255, 255);
