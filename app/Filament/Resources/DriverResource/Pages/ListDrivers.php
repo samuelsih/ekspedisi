@@ -24,7 +24,8 @@ class ListDrivers extends ListRecords
             Actions\ExportAction::make()
                 ->color('primary')
                 ->label('Export delivery man')
-                ->exporter(DriverExporter::class),
+                ->exporter(DriverExporter::class)
+                ->visible(auth()->user()->can('export_driver')),
 
             Actions\CreateAction::make(),
         ];

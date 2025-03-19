@@ -135,6 +135,7 @@ class DriverResource extends Resource implements HasShieldPermissions
             'delete',
             'delete_any',
             'import',
+            'export'
         ];
     }
 }
