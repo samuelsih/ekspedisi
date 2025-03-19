@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\DriverResource\Pages;
 
+use App\Filament\Exports\DriverExporter;
 use App\Filament\Imports\DriverImporter;
 use App\Filament\Resources\DriverResource;
 use Filament\Actions;
@@ -19,6 +20,12 @@ class ListDrivers extends ListRecords
                 ->label('Import delivery man')
                 ->importer(DriverImporter::class)
                 ->visible(auth()->user()->can('import_driver')),
+
+            Actions\ExportAction::make()
+                ->color('primary')
+                ->label('Export delivery man')
+                ->exporter(DriverExporter::class),
+
             Actions\CreateAction::make(),
         ];
     }
