@@ -7,7 +7,6 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Uri;
 
 class CheckSurveyPhotoCommand extends Command
@@ -41,10 +40,6 @@ class CheckSurveyPhotoCommand extends Command
                 );
 
                 if (! $response->successful()) {
-                    Log::warning('Check Survey Photo Command: Face detection url hit is not success',
-                        ['id' => $this->surveyId, 'status' => $response->status()]
-                    );
-
                     return;
                 }
 
@@ -55,8 +50,6 @@ class CheckSurveyPhotoCommand extends Command
                         'face_detected' => false,
                     ]);
                 }
-
-                Log::info("Done", ["img_url" => $survey->img_url]);
             });
         });
     }
