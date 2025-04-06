@@ -96,6 +96,7 @@ class CustomerSurveyDeclineResource extends Resource implements HasShieldPermiss
             'view_any',
             'delete',
             'delete_any',
+            'export',
         ];
     }
 }
