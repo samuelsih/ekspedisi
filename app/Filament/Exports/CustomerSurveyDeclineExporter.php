@@ -3,6 +3,7 @@
 namespace App\Filament\Exports;
 
 use App\Models\CustomerSurveyDecline;
+use Carbon\CarbonInterface;
 use Filament\Actions\Exports\ExportColumn;
 use Filament\Actions\Exports\Exporter;
 use Filament\Actions\Exports\Models\Export;
@@ -42,5 +43,15 @@ class CustomerSurveyDeclineExporter extends Exporter
         }
 
         return $body;
+    }
+
+    public function getJobRetryUntil(): ?CarbonInterface
+    {
+        return now()->addDay();
+    }
+
+    public function getFileDisk(): string
+    {
+        return 's3';
     }
 }
